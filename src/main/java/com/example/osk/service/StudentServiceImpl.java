@@ -56,26 +56,24 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentRequest getStudentWithCourses(Long id) {
         Student student = getStudent(id);
-        StudentRequest studentRequest = new StudentRequest();
-        studentRequest.setId(student.getId());
-        studentRequest.setName(student.getName());
-        studentRequest.setSecondName(student.getSecondName());
-        studentRequest.setLastName(student.getLastName());
-        studentRequest.setEmail(student.getEmail());
-        studentRequest.setPassword(student.getPassword());
-        studentRequest.setDob(student.getDob());
-        studentRequest.setAge(student.getAge());
+        StudentRequest studentRequest = new StudentRequest(
+                student.getId(),
+                student.getName(),
+                student.getSecondName(),
+                student.getLastName(),
+                student.getEmail(),
+                student.getPassword(),
+                student.getDob(),
+                student.getAge()
+        );
         List<CourseRequest> courses = courseService.getCoursesByStudent(student);
         studentRequest.setCourse(courses);
         return studentRequest;
     }
 
     @Override
-    @Transactional
-    public Student saveStudent(StudentRequest studentRequest) {
-        Student student = new Student(studentRequest);
-        student = studentRepository.save(student);
-        return student;
+    public void saveStudent(Student student) {
+        studentRepository.save(student);
     }
 
 
@@ -88,13 +86,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public Student updateStudent(Long id,
-                                 String name,
-                                 String secondName,
-                                 String lastName,
-                                 String email,
-                                 String password,
-                                 LocalDate dob) {
+    public void updateStudent(Long id,
+                              String name,
+                              String secondName,
+                              String lastName,
+                              String email,
+                              String password,
+                              LocalDate dob) {
         Student student = getStudent(id);
         if (name != null &&
                 name.length() > 0 &&
@@ -123,6 +121,6 @@ public class StudentServiceImpl implements StudentService {
                 !Objects.equals(student.getDob(), dob)) {
             student.setDob(dob);
         }
-        return studentRepository.save(student);
+        studentRepository.save(student);
     }
 }

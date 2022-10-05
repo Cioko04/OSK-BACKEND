@@ -1,5 +1,6 @@
 package com.example.osk.service;
 
+import com.example.osk.model.Category;
 import com.example.osk.model.Course;
 import com.example.osk.model.Student;
 import com.example.osk.request.CourseRequest;
@@ -12,16 +13,21 @@ public interface CourseService {
 
     List<CourseRequest> getCoursesByStudent(Student student);
 
+    List<CourseRequest> getCoursesByCategory(Category category);
+
     void saveCourseForStudent(CourseRequest courseRequest, Long studentId, Long categoryId);
 
     void deleteCourse(Long id);
 
     void deleteCoursesByStudent(Student student);
 
+    void deleteCoursesByCategory(Category category);
+
     @Transactional
     void updateCourse(Long id,
                       Date startDate,
                       Integer timeInHours,
                       Integer spendTimeInHours);
+
 
 }

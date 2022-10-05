@@ -33,6 +33,13 @@ public class CourseServiceImpl implements CourseService {
         coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(course)));
         return coursesRequest;
     }
+    @Override
+    public List<CourseRequest> getCoursesByCategory(Category category) {
+        List<Course> coursesByStudent = courseRepository.findByCategory(category);
+        List<CourseRequest> coursesRequest = new ArrayList<>();
+        coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(course)));
+        return coursesRequest;
+    }
 
     @Override
     public void saveCourseForStudent(CourseRequest courseRequest, Long studentId, Long categoryId) {
@@ -73,6 +80,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void deleteCoursesByCategory(Category category) {
+        courseRepository.deleteAll(category.getCourses());
+    }
+
+    @Override
     @Transactional
     public void updateCourse(Long id,
                              Date startDate,
@@ -90,4 +102,5 @@ public class CourseServiceImpl implements CourseService {
         }
         courseRepository.save(course);
     }
+
 }

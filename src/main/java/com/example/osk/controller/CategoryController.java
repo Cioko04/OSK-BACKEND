@@ -2,6 +2,7 @@ package com.example.osk.controller;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.CategoryType;
+import com.example.osk.request.CategoryRequest;
 import com.example.osk.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,27 +23,33 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> getCategories() {
-        return categoryService.getCategories();
+    public ResponseEntity<List<CategoryRequest>> getCategories() {
+        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/course")
+    public ResponseEntity<List<CategoryRequest>> getCategoriesWithCourses() {
+        return new ResponseEntity<>(categoryService.getCategoriesWithCourses(), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public Category getCategory(@PathVariable("id") Long id) {
-        return categoryService.getCategory(id);
+    public ResponseEntity<CategoryRequest> getCategory(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(categoryService.getCategoryWithCourses(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public void addNewCategory(@Valid @RequestBody Category category){
+    public ResponseEntity<String> addNewCategory(@Valid @RequestBody Category category){
         categoryService.saveCategory(category);
+        return new ResponseEntity<>("Category added!", HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "{categoryId}")
+    @DeleteMapping("{categoryId}")
     public ResponseEntity<String> deleteStudent(@PathVariable("categoryId") Long categoryId) {
         categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>("Record deleted! ", HttpStatus.OK);
+        return new ResponseEntity<>("Category deleted! ", HttpStatus.OK);
     }
 
-    @PutMapping(path = "{categoryId}")
+    @PutMapping( "{categoryId}")
     public ResponseEntity<String> updateStudent(
             @PathVariable("categoryId") Long categoryId,
             @RequestParam(required = false) CategoryType categoryType,
@@ -54,6 +61,6 @@ public class CategoryController {
                 price,
                 time);
 
-        return new ResponseEntity<>("Record updated! ", HttpStatus.OK);
+        return new ResponseEntity<>("Category updated! ", HttpStatus.OK);
     }
 }

@@ -17,6 +17,9 @@ public class CourseRequest {
     private CategoryType categoryType;
     private Integer price;
 
+    public CourseRequest() {
+    }
+
     public CourseRequest(Course course){
         this.id = course.getId();
         this.startDate = course.getStartDate();

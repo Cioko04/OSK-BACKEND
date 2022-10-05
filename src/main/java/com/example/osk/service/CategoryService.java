@@ -2,23 +2,27 @@ package com.example.osk.service;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.CategoryType;
-import com.example.osk.model.Student;
+import com.example.osk.request.CategoryRequest;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 public interface CategoryService {
-    List<Category> getCategories();
+    List<CategoryRequest> getCategories();
+
+    List<CategoryRequest> getCategoriesWithCourses();
 
     Category getCategory(Long id);
 
-    Category saveCategory(Category category);
+    CategoryRequest getCategoryWithCourses(Long id);
+
+    void saveCategory(Category category);
 
     void deleteCategory(Long id);
 
     @Transactional
-    Category updateCategory(Long id,
-                          CategoryType categoryType,
-                          Integer price,
-                          Integer time);
+    void updateCategory(Long id,
+                            CategoryType categoryType,
+                            Integer price,
+                            Integer time);
 }
