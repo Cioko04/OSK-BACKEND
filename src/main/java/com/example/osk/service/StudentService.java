@@ -14,13 +14,13 @@ public interface StudentService {
 
     StudentRequest getStudentWithCourses(Long id);
 
-    @Transactional
-    Student saveStudent(StudentRequest studentRequest);
+
+    void saveStudent(Student student);
 
     void deleteStudent(Long id);
 
     @Transactional
-    Student updateStudent(Long id,
+    void updateStudent(Long id,
                           String name,
                           String secondName,
                           String lastName,

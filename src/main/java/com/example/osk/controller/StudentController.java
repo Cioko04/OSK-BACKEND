@@ -1,5 +1,6 @@
 package com.example.osk.controller;
 
+import com.example.osk.model.Student;
 import com.example.osk.request.StudentRequest;
 import com.example.osk.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,15 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewStudent(@Valid @RequestBody StudentRequest studentRequest){
-        studentService.saveStudent(studentRequest);
-        return new ResponseEntity<>("Record saved! ", HttpStatus.CREATED);
+    public ResponseEntity<String> registerNewStudent(@Valid @RequestBody Student student){
+        studentService.saveStudent(student);
+        return new ResponseEntity<>("Student saved! ", HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{studentId}")
     public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) {
         studentService.deleteStudent(studentId);
-        return new ResponseEntity<>("Record deleted! ", HttpStatus.OK);
+        return new ResponseEntity<>("Student deleted! ", HttpStatus.OK);
     }
 
     @PutMapping(path = "{studentId}")
@@ -61,6 +62,6 @@ public class StudentController {
                 password,
                 dob);
 
-        return new ResponseEntity<>("Record updated! ", HttpStatus.OK);
+        return new ResponseEntity<>("Student updated! ", HttpStatus.OK);
     }
 }
