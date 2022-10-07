@@ -11,9 +11,11 @@ import java.util.List;
 
 public interface CourseService {
 
-    List<CourseRequest> getCoursesByStudent(Student student);
+    List<CourseRequest> getCoursesByStudentId(Long studentId);
 
-    List<CourseRequest> getCoursesByCategory(Category category);
+    List<CourseRequest> getCoursesByCategoryId(Long categoryId);
+
+    List<CourseRequest> getCoursesByParam(Long studentId, Long categoryId);
 
     void saveCourseForStudent(CourseRequest courseRequest, Long studentId, Long categoryId);
 
@@ -28,6 +30,7 @@ public interface CourseService {
                       Date startDate,
                       Integer timeInHours,
                       Integer spendTimeInHours);
+
 
 
 }

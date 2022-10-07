@@ -27,14 +27,9 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 
-    @GetMapping("/course")
-    public ResponseEntity<List<CategoryRequest>> getCategoriesWithCourses() {
-        return new ResponseEntity<>(categoryService.getCategoriesWithCourses(), HttpStatus.OK);
-    }
-
     @GetMapping("{id}")
     public ResponseEntity<CategoryRequest> getCategory(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(categoryService.getCategoryWithCourses(id), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getCategory(id), HttpStatus.OK);
     }
 
     @PostMapping

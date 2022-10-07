@@ -27,18 +27,41 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseRequest> getCoursesByStudent(Student student) {
-        List<Course> coursesByStudent = courseRepository.findByStudent(student);
+    public List<CourseRequest> getCoursesByStudentId(Long studentId) {
+        List<Course> coursesByStudent = courseRepository.findByStudentId(studentId);
         List<CourseRequest> coursesRequest = new ArrayList<>();
-        coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(course)));
+        coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(
+                course.getId(),
+                studentId,
+                course.getCategory().getId(),
+                course.getStartDate(),
+                course.getSpendTimeInHours(),
+                course.isValid())));
         return coursesRequest;
     }
+
     @Override
-    public List<CourseRequest> getCoursesByCategory(Category category) {
-        List<Course> coursesByStudent = courseRepository.findByCategory(category);
+    public List<CourseRequest> getCoursesByCategoryId(Long categoryId) {
+        List<Course> coursesByStudent = courseRepository.findByCategoryId(categoryId);
         List<CourseRequest> coursesRequest = new ArrayList<>();
-        coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(course)));
+        coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(
+                course.getId(),
+                course.getStudent().getId(),
+                categoryId,
+                course.getStartDate(),
+                course.getSpendTimeInHours(),
+                course.isValid())));
         return coursesRequest;
+    }
+
+    @Override
+    public List<CourseRequest> getCoursesByParam(Long studentId, Long categoryId) {
+        if (studentId != null) {
+            return getCoursesByStudentId(studentId);
+        } else if (categoryId != null) {
+            return getCoursesByCategoryId(categoryId);
+        }
+        throw new IllegalArgumentException("There is no param!");
     }
 
     @Override

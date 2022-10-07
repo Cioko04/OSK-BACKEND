@@ -2,13 +2,16 @@ package com.example.osk.request;
 
 import com.example.osk.model.Course;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class StudentRequest {
     private Long id;
     private String name;
@@ -18,10 +21,7 @@ public class StudentRequest {
     private String password;
     private LocalDate dob;
     private Integer age;
-    private List<CourseRequest> course;
-
-    public StudentRequest() {
-    }
+    private List<CourseRequest> course = new ArrayList<>();
 
     public StudentRequest(Long id, String name, String secondName, String lastName, String email, String password, LocalDate dob, Integer age) {
         this.id = id;

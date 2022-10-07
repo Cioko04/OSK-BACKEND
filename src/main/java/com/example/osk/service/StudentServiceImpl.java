@@ -2,7 +2,6 @@ package com.example.osk.service;
 
 import com.example.osk.model.Student;
 import com.example.osk.repository.StudentRepository;
-import com.example.osk.request.CourseRequest;
 import com.example.osk.request.StudentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,23 +39,17 @@ public class StudentServiceImpl implements StudentService {
                     student.getDob(),
                     student.getAge()
             );
-            List<CourseRequest> courses = courseService.getCoursesByStudent(student);
-            studentRequest.setCourse(courses);
             studentRequestList.add(studentRequest);
         });
         return studentRequestList;
     }
 
     @Override
-    public Student getStudent(Long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+    public StudentRequest getStudent(Long id) {
+        Student student = getStudentById(id);
+        studentRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "student with id " + id + " does not exist"));
-    }
-
-    @Override
-    public StudentRequest getStudentWithCourses(Long id) {
-        Student student = getStudent(id);
-        StudentRequest studentRequest = new StudentRequest(
+        return new StudentRequest(
                 student.getId(),
                 student.getName(),
                 student.getSecondName(),
@@ -66,20 +59,22 @@ public class StudentServiceImpl implements StudentService {
                 student.getDob(),
                 student.getAge()
         );
-        List<CourseRequest> courses = courseService.getCoursesByStudent(student);
-        studentRequest.setCourse(courses);
-        return studentRequest;
+    }
+
+    private Student getStudentById(Long id) {
+        return studentRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+                "student with id " + id + " does not exist"));
     }
 
     @Override
-    public void saveStudent(Student student) {
-        studentRepository.save(student);
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
     }
 
 
     @Override
     public void deleteStudent(Long id) {
-        Student student = getStudent(id);
+        Student student = getStudentById(id);
         courseService.deleteCoursesByStudent(student);
         studentRepository.deleteById(id);
     }
@@ -93,7 +88,7 @@ public class StudentServiceImpl implements StudentService {
                               String email,
                               String password,
                               LocalDate dob) {
-        Student student = getStudent(id);
+        Student student = getStudentById(id);
         if (name != null &&
                 name.length() > 0 &&
                 !Objects.equals(student.getName(), name)) {

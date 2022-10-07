@@ -10,12 +10,9 @@ import java.util.List;
 public interface StudentService {
     List<StudentRequest> getStudents();
 
-    Student getStudent(Long id);
+    StudentRequest getStudent(Long id);
 
-    StudentRequest getStudentWithCourses(Long id);
-
-
-    void saveStudent(Student student);
+    Student saveStudent(Student student);
 
     void deleteStudent(Long id);
 

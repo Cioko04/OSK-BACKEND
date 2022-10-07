@@ -10,11 +10,7 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryRequest> getCategories();
 
-    List<CategoryRequest> getCategoriesWithCourses();
-
-    Category getCategory(Long id);
-
-    CategoryRequest getCategoryWithCourses(Long id);
+    CategoryRequest getCategory(Long id);
 
     void saveCategory(Category category);
 

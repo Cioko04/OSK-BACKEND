@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/course")
@@ -19,6 +20,11 @@ public class CourseController {
     @Autowired
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CourseRequest>> getCoursesByParam(@RequestParam(required = false) Long studentId, @RequestParam(required = false) Long categoryId){
+        return new ResponseEntity<>(courseService.getCoursesByParam(studentId,categoryId), HttpStatus.OK);
     }
 
     @PostMapping

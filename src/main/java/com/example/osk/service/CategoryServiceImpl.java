@@ -40,42 +40,21 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRequestList;
     }
 
-    @Override
-    public List<CategoryRequest> getCategoriesWithCourses() {
-        List<Category> categories = categoryRepository.findAll();
-        List<CategoryRequest> categoryRequestList = new ArrayList<>();
-        categories.forEach(category -> {
-            CategoryRequest categoryRequest = new CategoryRequest(
-                    category.getId(),
-                    category.getCategoryType(),
-                    category.getPrice(),
-                    category.getTime()
-            );
-            List<CourseRequest> courses = courseService.getCoursesByCategory(category);
-            categoryRequest.setCourses(courses);
-            categoryRequestList.add(categoryRequest);
-        });
-        return categoryRequestList;
-    }
 
-    @Override
-    public Category getCategory(Long id) {
+    private Category getCategoryById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "category with id " + id + " does not exist"));
     }
 
     @Override
-    public CategoryRequest getCategoryWithCourses(Long id) {
-        Category category = getCategory(id);
-        CategoryRequest categoryRequest = new CategoryRequest(
+    public CategoryRequest getCategory(Long id) {
+        Category category = getCategoryById(id);
+        return new CategoryRequest(
                 category.getId(),
                 category.getCategoryType(),
                 category.getPrice(),
                 category.getTime()
         );
-        List<CourseRequest> courses = courseService.getCoursesByCategory(category);
-        categoryRequest.setCourses(courses);
-        return categoryRequest;
     }
 
     @Override
@@ -85,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        Category category = getCategory(id);
+        Category category = getCategoryById(id);
         courseService.deleteCoursesByCategory(category);
         categoryRepository.deleteById(id);
 
@@ -94,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void updateCategory(Long id, CategoryType categoryType, Integer price, Integer time) {
-        Category category = getCategory(id);
+        Category category = getCategoryById(id);
         if (categoryType != null &&
                 !Objects.equals(category.getCategoryType(), categoryType)) {
             category.setCategoryType(categoryType);

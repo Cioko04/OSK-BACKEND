@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/student")
+@RequestMapping(path = "/students")
 public class StudentController {
     private final StudentService studentService;
 
@@ -27,15 +28,14 @@ public class StudentController {
         return new ResponseEntity<>(studentService.getStudents(), HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<StudentRequest> getStudent(@PathVariable("id") Long id){
-        return new ResponseEntity<>(studentService.getStudentWithCourses(id), HttpStatus.OK);
+    @GetMapping(path = "{id}")
+    public ResponseEntity<StudentRequest> getStudent(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(studentService.getStudent(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewStudent(@Valid @RequestBody Student student){
-        studentService.saveStudent(student);
-        return new ResponseEntity<>("Student saved! ", HttpStatus.CREATED);
+    public ResponseEntity<Student> registerNewStudent(@Valid @RequestBody Student student) {
+        return new ResponseEntity<>(studentService.saveStudent(student), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{studentId}")
