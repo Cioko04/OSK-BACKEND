@@ -1,7 +1,5 @@
 package com.example.osk.request;
 
-import com.example.osk.model.CategoryType;
-import com.example.osk.model.Course;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

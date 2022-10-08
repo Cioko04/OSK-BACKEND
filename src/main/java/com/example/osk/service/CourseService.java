@@ -1,7 +1,6 @@
 package com.example.osk.service;
 
 import com.example.osk.model.Category;
-import com.example.osk.model.Course;
 import com.example.osk.model.Student;
 import com.example.osk.request.CourseRequest;
 

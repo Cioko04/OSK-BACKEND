@@ -1,14 +1,6 @@
 package com.example.osk.student;
 
-import com.example.osk.model.Student;
-import com.example.osk.repository.StudentRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.time.LocalDate;
-import java.time.Month;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

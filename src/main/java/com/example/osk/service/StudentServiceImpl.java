@@ -1,8 +1,10 @@
 package com.example.osk.service;
 
 import com.example.osk.model.Student;
+import com.example.osk.model.User;
 import com.example.osk.repository.StudentRepository;
 import com.example.osk.request.StudentRequest;
+import com.example.osk.request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +18,12 @@ import java.util.Objects;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
-    private final CourseService courseService;
+    private final UserService userService;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, CourseService courseService) {
+    public StudentServiceImpl(StudentRepository studentRepository, UserService userService) {
         this.studentRepository = studentRepository;
-        this.courseService = courseService;
+        this.userService = userService;
     }
 
     @Override
@@ -29,17 +31,16 @@ public class StudentServiceImpl implements StudentService {
         List<Student> studentList = studentRepository.findAll();
         List<StudentRequest> studentRequestList = new ArrayList<>();
         studentList.forEach(student -> {
-            StudentRequest studentRequest = new StudentRequest(
-                    student.getId(),
-                    student.getName(),
-                    student.getSecondName(),
-                    student.getLastName(),
-                    student.getEmail(),
-                    student.getPassword(),
-                    student.getDob(),
-                    student.getAge()
-            );
-            studentRequestList.add(studentRequest);
+            User user = student.getUser();
+            UserRequest userRequest = new UserRequest(user.getId(),
+                    user.getName(),
+                    user.getSecondName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getDob(),
+                    user.getAge());
+            studentRequestList.add(new StudentRequest(student.getId(), userRequest));
         });
         return studentRequestList;
     }
@@ -47,75 +48,39 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentRequest getStudent(Long id) {
         Student student = getStudentById(id);
-        studentRepository.findById(id).orElseThrow(() -> new IllegalStateException(
-                "student with id " + id + " does not exist"));
-        return new StudentRequest(
-                student.getId(),
-                student.getName(),
-                student.getSecondName(),
-                student.getLastName(),
-                student.getEmail(),
-                student.getPassword(),
-                student.getDob(),
-                student.getAge()
+        User user = student.getUser();
+        UserRequest userRequest = new UserRequest(
+                user.getId(),
+                user.getName(),
+                user.getSecondName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getDob(),
+                user.getAge()
         );
+        return new StudentRequest(student.getId(), userRequest);
     }
 
     private Student getStudentById(Long id) {
         return studentRepository.findById(id).orElseThrow(() -> new IllegalStateException(
-                "student with id " + id + " does not exist"));
+                "Student with id " + id + " does not exist"));
     }
 
     @Override
     public Student saveStudent(Student student) {
+        userService.saveUser(student.getUser());
         return studentRepository.save(student);
     }
 
 
     @Override
+    @Transactional
     public void deleteStudent(Long id) {
         Student student = getStudentById(id);
-        courseService.deleteCoursesByStudent(student);
         studentRepository.deleteById(id);
-    }
+        userService.deleteUser(student.getUser().getId());
+//        courseService.deleteCoursesByStudent(student);
 
-    @Override
-    @Transactional
-    public void updateStudent(Long id,
-                              String name,
-                              String secondName,
-                              String lastName,
-                              String email,
-                              String password,
-                              LocalDate dob) {
-        Student student = getStudentById(id);
-        if (name != null &&
-                name.length() > 0 &&
-                !Objects.equals(student.getName(), name)) {
-            student.setName(name);
-        }
-        if (!Objects.equals(student.getSecondName(), secondName)) {
-            student.setSecondName(secondName);
-        }
-        if (lastName != null &&
-                lastName.length() > 0 &&
-                !Objects.equals(student.getLastName(), lastName)) {
-            student.setLastName(lastName);
-        }
-        if (email != null &&
-                email.length() > 0 &&
-                !Objects.equals(student.getEmail(), email)) {
-            student.setEmail(email);
-        }
-        if (password != null &&
-                password.length() > 0 &&
-                !Objects.equals(student.getPassword(), password)) {
-            student.setPassword(password);
-        }
-        if (dob != null &&
-                !Objects.equals(student.getDob(), dob)) {
-            student.setDob(dob);
-        }
-        studentRepository.save(student);
     }
 }

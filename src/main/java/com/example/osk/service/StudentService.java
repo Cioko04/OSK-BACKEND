@@ -2,6 +2,7 @@ package com.example.osk.service;
 
 import com.example.osk.model.Student;
 import com.example.osk.request.StudentRequest;
+import com.example.osk.request.UserRequest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -16,12 +17,4 @@ public interface StudentService {
 
     void deleteStudent(Long id);
 
-    @Transactional
-    void updateStudent(Long id,
-                          String name,
-                          String secondName,
-                          String lastName,
-                          String email,
-                          String password,
-                          LocalDate dob);
 }
