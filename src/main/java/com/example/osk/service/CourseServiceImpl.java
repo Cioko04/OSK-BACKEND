@@ -2,37 +2,40 @@ package com.example.osk.service;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.Course;
-import com.example.osk.model.Student;
+import com.example.osk.model.User;
 import com.example.osk.repository.CategoryRepository;
 import com.example.osk.repository.CourseRepository;
-import com.example.osk.repository.StudentRepository;
+import com.example.osk.repository.UserRepository;
 import com.example.osk.request.CourseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
-    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, StudentRepository studentRepository, CategoryRepository categoryRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.courseRepository = courseRepository;
-        this.studentRepository = studentRepository;
+        this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public List<CourseRequest> getCoursesByStudentId(Long studentId) {
-        List<Course> coursesByStudent = courseRepository.findByStudentId(studentId);
+    public List<CourseRequest> getCoursesByStudentId(Long userId) {
+        List<Course> coursesByStudent = courseRepository.findByStudentId(userId);
         List<CourseRequest> coursesRequest = new ArrayList<>();
         coursesByStudent.forEach(course -> coursesRequest.add(new CourseRequest(
                 course.getId(),
-                studentId,
+                userId,
                 course.getCategory().getId(),
                 course.getStartDate(),
                 course.getSpendTimeInHours(),
@@ -66,7 +69,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void saveCourseForStudent(CourseRequest courseRequest, Long studentId, Long categoryId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new IllegalStateException(
+        User student = userRepository.findById(studentId).orElseThrow(() -> new IllegalStateException(
                 "student with id " + studentId + " does not exist"));
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalStateException(
                 "student with id " + studentId + " does not exist"));
@@ -88,7 +91,7 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
-    private boolean checkIfStudentHasTypeOfCategory(Student student, Category category) {
+    private boolean checkIfStudentHasTypeOfCategory(User student, Category category) {
         return student.getCourses().stream().anyMatch(course -> course.getCategory().getCategoryType().equals(category.getCategoryType()));
     }
 
@@ -98,7 +101,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void deleteCoursesByStudent(Student student) {
+    public void deleteCoursesByStudent(User student) {
         courseRepository.deleteAll(student.getCourses());
     }
 

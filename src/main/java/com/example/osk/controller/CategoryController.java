@@ -33,7 +33,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewCategory(@Valid @RequestBody Category category){
+    public ResponseEntity<String> addNewCategory(@Valid @RequestBody Category category) {
         categoryService.saveCategory(category);
         return new ResponseEntity<>("Category added!", HttpStatus.CREATED);
     }
@@ -44,17 +44,27 @@ public class CategoryController {
         return new ResponseEntity<>("Category deleted! ", HttpStatus.OK);
     }
 
-    @PutMapping( "{categoryId}")
-    public ResponseEntity<String> updateStudent(
-            @PathVariable("categoryId") Long categoryId,
-            @RequestParam(required = false) CategoryType categoryType,
-            @RequestParam(required = false) Integer price,
-            @RequestParam(required = false) Integer time) {
-        categoryService.updateCategory(
-                categoryId,
-                categoryType,
-                price,
-                time);
+    @PutMapping(path = "delete")
+    public ResponseEntity<String> deleteCategoryFormInstructor(@RequestParam Long instructorId,
+                                                              @RequestParam Long categoryId) {
+        categoryService.deleteCategoryFromInstructor(instructorId, categoryId);
+        return new ResponseEntity<>("Category deleted! ", HttpStatus.OK);
+    }
+
+    @PutMapping(path = "add")
+    public ResponseEntity<String> updateCategoryForInstructor(@RequestParam Long instructorId,
+                                                              @RequestParam Long categoryId) {
+        categoryService.addCategoryForInstructor(instructorId, categoryId);
+        return new ResponseEntity<>("Category updated! ", HttpStatus.OK);
+    }
+
+    @PutMapping("{categoryId}")
+    public ResponseEntity<String> updateStudent(@PathVariable("categoryId") Long categoryId,
+                                                @RequestParam(required = false) CategoryType categoryType,
+                                                @RequestParam(required = false) Integer price,
+                                                @RequestParam(required = false) Integer time) {
+
+        categoryService.updateCategory(categoryId, categoryType, price, time);
 
         return new ResponseEntity<>("Category updated! ", HttpStatus.OK);
     }

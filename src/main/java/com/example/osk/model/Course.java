@@ -29,7 +29,7 @@ public class Course {
     private boolean isValid;
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private Student student;
+    private User student;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

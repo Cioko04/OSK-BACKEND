@@ -2,7 +2,10 @@ package com.example.osk.model;
 
 
 import com.example.osk.request.UserRequest;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -40,6 +43,17 @@ public class User {
     private LocalDate dob;
     @Transient
     private Integer age;
+
+    @OneToMany(mappedBy = "student")
+    private List<Course> courses = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "instructors_category",
+            joinColumns = @JoinColumn(name = "instructor_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categoryList = new ArrayList<>();
 
     public User(UserRequest userRequest){
         this.name = userRequest.getName();

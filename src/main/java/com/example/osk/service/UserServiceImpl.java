@@ -7,15 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final CourseService courseService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, CourseService courseService) {
         this.userRepository = userRepository;
+        this.courseService = courseService;
+    }
+
+    @Override
+    public List<UserRequest> getStudents() {
+        return null;
     }
 
     @Override
@@ -45,8 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        courseService.deleteCoursesByStudent(getUserById(id));
         userRepository.deleteById(id);
-
     }
 
     @Override
