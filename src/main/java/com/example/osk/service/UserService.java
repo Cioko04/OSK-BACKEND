@@ -5,8 +5,12 @@ import com.example.osk.request.UserRequest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 public interface UserService {
+
+    List<UserRequest> getStudents();
+
     UserRequest getUser(Long id);
 
     User saveUser(User user);
@@ -15,10 +19,10 @@ public interface UserService {
 
     @Transactional
     void updateUser(Long id,
-                       String name,
-                       String secondName,
-                       String lastName,
-                       String email,
-                       String password,
-                       LocalDate dob);
+                    String name,
+                    String secondName,
+                    String lastName,
+                    String email,
+                    String password,
+                    LocalDate dob);
 }

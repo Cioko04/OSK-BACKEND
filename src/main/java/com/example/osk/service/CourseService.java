@@ -1,7 +1,7 @@
 package com.example.osk.service;
 
 import com.example.osk.model.Category;
-import com.example.osk.model.Student;
+import com.example.osk.model.User;
 import com.example.osk.request.CourseRequest;
 
 import javax.transaction.Transactional;
@@ -20,7 +20,7 @@ public interface CourseService {
 
     void deleteCourse(Long id);
 
-    void deleteCoursesByStudent(Student student);
+    void deleteCoursesByStudent(User student);
 
     void deleteCoursesByCategory(Category category);
 
@@ -29,7 +29,6 @@ public interface CourseService {
                       Date startDate,
                       Integer timeInHours,
                       Integer spendTimeInHours);
-
 
 
 }

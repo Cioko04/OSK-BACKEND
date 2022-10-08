@@ -36,6 +36,8 @@ public class Category {
     private Integer time;
     @OneToMany(mappedBy = "category")
     List<Course> courses = new ArrayList<>();
+    @ManyToMany(mappedBy = "categoryList")
+    private List<User> instructorList = new ArrayList<>();
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.osk.controller;
 
+import com.example.osk.model.User;
+import com.example.osk.request.UserRequest;
 import com.example.osk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -19,8 +23,29 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<UserRequest>> getStudents() {
+        return new ResponseEntity<>(userService.getStudents(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<UserRequest> getUser(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<User> registerNewUser(@Valid @RequestBody User User) {
+        return new ResponseEntity<>(userService.saveUser(User), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "{UserId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("UserId") Long UserId) {
+        userService.deleteUser(UserId);
+        return new ResponseEntity<>("User deleted! ", HttpStatus.OK);
+    }
+
     @PutMapping(path = "{id}")
-    public ResponseEntity<String> updateStudent(
+    public ResponseEntity<String> updateUser(
             @PathVariable("id") Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String secondName,
