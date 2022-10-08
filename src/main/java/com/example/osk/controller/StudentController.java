@@ -2,6 +2,7 @@ package com.example.osk.controller;
 
 import com.example.osk.model.Student;
 import com.example.osk.request.StudentRequest;
+import com.example.osk.request.UserRequest;
 import com.example.osk.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,26 +42,5 @@ public class StudentController {
     public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) {
         studentService.deleteStudent(studentId);
         return new ResponseEntity<>("Student deleted! ", HttpStatus.OK);
-    }
-
-    @PutMapping(path = "{studentId}")
-    public ResponseEntity<String> updateStudent(
-            @PathVariable("studentId") Long studentId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String secondName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) LocalDate dob) {
-        studentService.updateStudent(
-                studentId,
-                name,
-                secondName,
-                lastName,
-                email,
-                password,
-                dob);
-
-        return new ResponseEntity<>("Student updated! ", HttpStatus.OK);
     }
 }
