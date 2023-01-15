@@ -17,6 +17,8 @@ public interface UserService {
 
     void deleteUser(Long id);
 
+    boolean existsByEmail(String email);
+
     @Transactional
     void updateUser(Long id,
                     String name,

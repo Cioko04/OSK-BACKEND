@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserRequest>> getStudents() {
+    public ResponseEntity<List<UserRequest>> getUsers() {
         return new ResponseEntity<>(userService.getStudents(), HttpStatus.OK);
     }
 
@@ -33,9 +33,14 @@ public class UserController {
         return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/checkEmail")
+    public ResponseEntity<Boolean> existsByEmail(@RequestParam() String email) {
+        return new ResponseEntity<>(userService.existsByEmail(email), HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<User> registerNewUser(@Valid @RequestBody User User) {
-        return new ResponseEntity<>(userService.saveUser(User), HttpStatus.CREATED);
+    public ResponseEntity<User> registerNewUser(@Valid @RequestBody User user) {
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{UserId}")

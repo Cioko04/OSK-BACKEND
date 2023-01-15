@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRequest> getStudents() {
-        return null;
+        List<User> users = userRepository.findAll();
+        List<UserRequest> userRequests = new ArrayList<>();
+        users.forEach(user -> userRequests.add(new UserRequest(
+                user.getId(),
+                user.getName(),
+                user.getSecondName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getDob(),
+                user.getAge()
+        )));
+        return userRequests;
     }
 
     @Override
@@ -55,6 +68,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         courseService.deleteCoursesByStudent(getUserById(id));
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
