@@ -13,7 +13,7 @@ public interface UserService {
 
     UserRequest getUser(Long id);
 
-    User saveUser(User user);
+    User saveUser(UserRequest userRequest);
 
     void deleteUser(Long id);
 

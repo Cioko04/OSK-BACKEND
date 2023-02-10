@@ -2,7 +2,6 @@ package com.example.osk.service;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.CategoryType;
-import com.example.osk.model.User;
 import com.example.osk.request.CategoryRequest;
 
 import javax.transaction.Transactional;

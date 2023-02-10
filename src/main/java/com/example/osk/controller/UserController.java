@@ -4,22 +4,24 @@ import com.example.osk.model.User;
 import com.example.osk.request.UserRequest;
 import com.example.osk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping(path = "/users")
 public class UserController {
+
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
     }
 
@@ -35,12 +37,13 @@ public class UserController {
 
     @GetMapping(path = "/checkEmail")
     public ResponseEntity<Boolean> existsByEmail(@RequestParam() String email) {
+        System.out.println(userService.existsByEmail(email));
         return new ResponseEntity<>(userService.existsByEmail(email), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<User> registerNewUser(@Valid @RequestBody User user) {
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<User> registerNewUser(@RequestBody UserRequest userRequest) {
+        return new ResponseEntity<>(userService.saveUser(userRequest), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{UserId}")
