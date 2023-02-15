@@ -1,4 +1,4 @@
-package com.example.osk.request;
+package com.example.osk.dto;
 
 import com.example.osk.model.CategoryType;
 import lombok.Getter;

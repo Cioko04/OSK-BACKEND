@@ -5,7 +5,7 @@ import com.example.osk.model.CategoryType;
 import com.example.osk.model.User;
 import com.example.osk.repository.CategoryRepository;
 import com.example.osk.repository.UserRepository;
-import com.example.osk.request.CategoryRequest;
+import com.example.osk.dto.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

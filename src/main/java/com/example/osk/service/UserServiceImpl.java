@@ -2,8 +2,10 @@ package com.example.osk.service;
 
 import com.example.osk.model.User;
 import com.example.osk.repository.UserRepository;
-import com.example.osk.request.UserRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.osk.dto.UserRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,15 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UserServiceImpl implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final CourseService courseService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, CourseService courseService) {
-        this.userRepository = userRepository;
-        this.courseService = courseService;
-    }
 
     @Override
     public List<UserRequest> getStudents() {
@@ -60,7 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(UserRequest userRequest) {
+        User user = new User(userRequest);
         return userRepository.save(user);
     }
 
@@ -117,5 +115,14 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        final User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Faile to find user with email " + email);
+        }
+        return user;
     }
 }

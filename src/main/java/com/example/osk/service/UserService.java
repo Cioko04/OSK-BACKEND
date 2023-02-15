@@ -1,7 +1,7 @@
 package com.example.osk.service;
 
 import com.example.osk.model.User;
-import com.example.osk.request.UserRequest;
+import com.example.osk.dto.UserRequest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public interface UserService {
 
     UserRequest getUser(Long id);
 
-    User saveUser(User user);
+    User saveUser(UserRequest userRequest);
 
     void deleteUser(Long id);
 

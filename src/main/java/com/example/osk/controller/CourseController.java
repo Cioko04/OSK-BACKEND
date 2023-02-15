@@ -1,6 +1,6 @@
 package com.example.osk.controller;
 
-import com.example.osk.request.CourseRequest;
+import com.example.osk.dto.CourseRequest;
 import com.example.osk.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
