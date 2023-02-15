@@ -1,7 +1,7 @@
 package com.example.osk.controller;
 
 import com.example.osk.model.User;
-import com.example.osk.request.UserRequest;
+import com.example.osk.dto.UserRequest;
 import com.example.osk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

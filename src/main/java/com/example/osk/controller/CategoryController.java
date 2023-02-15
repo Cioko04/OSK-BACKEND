@@ -2,7 +2,7 @@ package com.example.osk.controller;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.CategoryType;
-import com.example.osk.request.CategoryRequest;
+import com.example.osk.dto.CategoryRequest;
 import com.example.osk.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

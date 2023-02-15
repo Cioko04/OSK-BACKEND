@@ -1,7 +1,7 @@
 package com.example.osk.service;
 
 import com.example.osk.model.User;
-import com.example.osk.request.UserRequest;
+import com.example.osk.dto.UserRequest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
