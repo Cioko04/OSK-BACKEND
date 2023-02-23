@@ -30,14 +30,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getStudents(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "{id}")
-    public ResponseEntity<UserRequest> getUser(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    @GetMapping(path = "{email}")
+    public ResponseEntity<UserRequest> getUser(@PathVariable("email") String email) {
+        return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
     }
 
     @GetMapping(path = "/checkEmail")
     public ResponseEntity<Boolean> existsByEmail(@RequestParam() String email) {
-        System.out.println(userService.existsByEmail(email));
         return new ResponseEntity<>(userService.existsByEmail(email), HttpStatus.OK);
     }
 

@@ -51,6 +51,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         );
     }
 
+    @Override
+    public UserRequest getUser(String email) {
+        User user = userRepository.findUserByEmail(email);
+        return new UserRequest(
+                user.getId(),
+                user.getName(),
+                user.getSecondName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getDob(),
+                user.getAge()
+        );
+    }
+
     private User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "User with id " + id + " does not exist"));
