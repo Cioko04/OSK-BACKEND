@@ -40,35 +40,29 @@ public class UserController {
         return new ResponseEntity<>(userService.existsByEmail(email), HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping(path = "/register")
     public ResponseEntity<User> registerNewUser(@RequestBody UserRequest userRequest) {
         return new ResponseEntity<>(userService.saveUser(userRequest), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "{UserId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("UserId") Long UserId) {
-        userService.deleteUser(UserId);
+    @DeleteMapping(path = "{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
         return new ResponseEntity<>("User deleted! ", HttpStatus.OK);
     }
 
-    @PutMapping(path = "{id}")
+    @PutMapping(path = "update/{id}")
     public ResponseEntity<String> updateUser(
             @PathVariable("id") Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String secondName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob) {
+            @RequestBody UserRequest userRequest) {
         userService.updateUser(
-                id,
-                name,
-                secondName,
-                lastName,
-                email,
-                password,
-                dob);
+                userRequest.getId(),
+                userRequest.getName(),
+                userRequest.getSecondName(),
+                userRequest.getLastName(),
+                userRequest.getEmail(),
+                userRequest.getPassword(),
+                userRequest.getDob());
 
         return new ResponseEntity<>("User updated! ", HttpStatus.OK);
     }

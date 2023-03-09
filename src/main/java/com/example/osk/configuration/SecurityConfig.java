@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/authenticate", "/users/checkEmail")
+                .antMatchers("/auth/authenticate", "/users/checkEmail", "/users/register")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
