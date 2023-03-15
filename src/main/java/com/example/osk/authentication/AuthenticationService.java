@@ -1,7 +1,7 @@
 package com.example.osk.authentication;
 
 import com.example.osk.configuration.JwtService;
-import com.example.osk.enums.Role;
+import com.example.osk.user.Role;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRepository;
 import lombok.RequiredArgsConstructor;

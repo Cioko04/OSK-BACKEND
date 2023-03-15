@@ -1,4 +1,4 @@
-package com.example.osk.enums;
+package com.example.osk.user;
 
 public enum Role {
     USER,

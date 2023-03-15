@@ -3,7 +3,7 @@ package com.example.osk.user;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.Course;
-import com.example.osk.enums.Role;
+import com.example.osk.token.Token;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,6 +47,9 @@ public class User implements UserDetails {
     private LocalDate dob;
     @Transient
     private Integer age;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @OneToMany(mappedBy = "student")
     private List<Course> courses = new ArrayList<>();
