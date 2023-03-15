@@ -1,6 +1,7 @@
 package com.example.osk.model;
 
 
+import com.example.osk.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

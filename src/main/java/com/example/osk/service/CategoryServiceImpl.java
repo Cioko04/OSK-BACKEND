@@ -2,9 +2,9 @@ package com.example.osk.service;
 
 import com.example.osk.model.Category;
 import com.example.osk.model.CategoryType;
-import com.example.osk.model.User;
+import com.example.osk.user.User;
 import com.example.osk.repository.CategoryRepository;
-import com.example.osk.repository.UserRepository;
+import com.example.osk.user.UserRepository;
 import com.example.osk.dto.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

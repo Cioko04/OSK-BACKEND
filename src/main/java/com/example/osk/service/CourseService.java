@@ -1,7 +1,7 @@
 package com.example.osk.service;
 
 import com.example.osk.model.Category;
-import com.example.osk.model.User;
+import com.example.osk.user.User;
 import com.example.osk.dto.CourseRequest;
 
 import javax.transaction.Transactional;

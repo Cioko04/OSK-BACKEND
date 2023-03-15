@@ -1,11 +1,10 @@
-package com.example.osk.model;
+package com.example.osk.user;
 
 
-import com.example.osk.dto.UserRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.osk.model.Category;
+import com.example.osk.model.Course;
+import com.example.osk.enums.Role;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,15 +13,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(
         name = "users",
@@ -44,6 +41,8 @@ public class User implements UserDetails {
     private String email;
     @NotNull
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @NotNull
     private LocalDate dob;
     @Transient
@@ -60,7 +59,7 @@ public class User implements UserDetails {
     )
     private List<Category> categoryList = new ArrayList<>();
 
-    public User(UserRequest userRequest){
+    public User(UserRequest userRequest) {
         this.name = userRequest.getName();
         this.secondName = userRequest.getSecondName();
         this.lastName = userRequest.getLastName();
@@ -75,7 +74,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return Set.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

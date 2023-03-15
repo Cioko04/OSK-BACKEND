@@ -1,14 +1,15 @@
-package com.example.osk.service;
+package com.example.osk.user;
 
-import com.example.osk.model.User;
-import com.example.osk.repository.UserRepository;
-import com.example.osk.dto.UserRequest;
+import com.example.osk.service.CourseService;
+import com.example.osk.user.User;
+import com.example.osk.user.UserRepository;
+import com.example.osk.user.UserRequest;
+import com.example.osk.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,17 +54,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserRequest getUser(String email) {
-        User user = userRepository.findUserByEmail(email);
-        return new UserRequest(
-                user.getId(),
-                user.getName(),
-                user.getSecondName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getDob(),
-                user.getAge()
-        );
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + email));
+        return new UserRequest(user);
     }
 
     private User getUserById(Long id) {
@@ -89,44 +82,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void updateUser(Long id,
-                           String name,
-                           String secondName,
-                           String lastName,
-                           String email,
-                           String password,
-                           LocalDate dob) {
+    public void updateUser(UserRequest userRequest) {
 
-        User user = getUserById(id);
+        User user = getUserById(userRequest.getId());
 
-        if (name != null &&
-                name.length() > 0 &&
-                !Objects.equals(user.getName(), name)) {
-            user.setName(name);
+        if (userRequest.getName() != null &&
+                userRequest.getName().length() > 0 &&
+                !Objects.equals(user.getName(), userRequest.getName())) {
+            user.setName(userRequest.getName());
         }
-        if (secondName != null &&
-                secondName.length() > 0 &&
-                !Objects.equals(user.getSecondName(), secondName)) {
-            user.setSecondName(secondName);
+        if (userRequest.getSecondName() != null &&
+                userRequest.getSecondName().length() > 0 &&
+                !Objects.equals(user.getSecondName(), userRequest.getSecondName())) {
+            user.setSecondName(userRequest.getSecondName());
         }
-        if (lastName != null &&
-                lastName.length() > 0 &&
-                !Objects.equals(user.getLastName(), lastName)) {
-            user.setLastName(lastName);
+        if (userRequest.getLastName() != null &&
+                userRequest.getLastName().length() > 0 &&
+                !Objects.equals(user.getLastName(), userRequest.getLastName())) {
+            user.setLastName(userRequest.getLastName());
         }
-        if (email != null &&
-                email.length() > 0 &&
-                !Objects.equals(user.getEmail(), email)) {
-            user.setEmail(email);
+        if (userRequest.getEmail() != null &&
+                userRequest.getEmail().length() > 0 &&
+                !Objects.equals(user.getEmail(), userRequest.getEmail())) {
+            user.setEmail(userRequest.getEmail());
         }
-        if (password != null &&
-                password.length() > 0 &&
-                !Objects.equals(user.getPassword(), password)) {
-            user.setPassword(password);
+        if (userRequest.getPassword() != null &&
+                userRequest.getPassword().length() > 0 &&
+                !Objects.equals(user.getPassword(), userRequest.getPassword())) {
+            user.setPassword(userRequest.getPassword());
         }
-        if (dob != null &&
-                !Objects.equals(user.getDob(), dob)) {
-            user.setDob(dob);
+        if (userRequest.getDob() != null &&
+                !Objects.equals(user.getDob(), userRequest.getDob())) {
+            user.setDob(userRequest.getDob());
         }
 
         userRepository.save(user);
@@ -134,10 +121,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        final User user = userRepository.findUserByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("Faile to find user with email " + email);
-        }
-        return user;
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + email));
     }
 }
