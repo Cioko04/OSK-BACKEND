@@ -1,4 +1,4 @@
-package com.example.osk.user;
+package com.example.osk.user.service;
 
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;

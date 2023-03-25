@@ -1,6 +1,6 @@
 package com.example.osk.configuration;
 
-import com.example.osk.user.UserRepository;
+import com.example.osk.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

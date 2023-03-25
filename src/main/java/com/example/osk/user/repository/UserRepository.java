@@ -1,4 +1,4 @@
-package com.example.osk.user;
+package com.example.osk.user.repository;
 
 import com.example.osk.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

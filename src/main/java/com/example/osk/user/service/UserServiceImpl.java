@@ -1,13 +1,13 @@
-package com.example.osk.user;
+package com.example.osk.user.service;
 
 import com.example.osk.service.CourseService;
 import com.example.osk.user.User;
-import com.example.osk.user.UserRepository;
 import com.example.osk.user.UserRequest;
-import com.example.osk.user.UserService;
+import com.example.osk.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final CourseService courseService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserRequest> getStudents() {
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (userRequest.getPassword() != null &&
                 userRequest.getPassword().length() > 0 &&
                 !Objects.equals(user.getPassword(), userRequest.getPassword())) {
-            user.setPassword(userRequest.getPassword());
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
         if (userRequest.getDob() != null &&
                 !Objects.equals(user.getDob(), userRequest.getDob())) {

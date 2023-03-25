@@ -1,5 +1,7 @@
-package com.example.osk.user;
+package com.example.osk.user.controller;
 
+import com.example.osk.user.UserRequest;
+import com.example.osk.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -31,11 +33,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/checkEmail")
-    public ResponseEntity<Boolean> existsByEmail(@RequestParam() String email) {
-        return new ResponseEntity<>(userService.existsByEmail(email), HttpStatus.OK);
-    }
-
     @DeleteMapping(path = "{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
@@ -48,7 +45,6 @@ public class UserController {
             @RequestBody UserRequest userRequest) {
         try {
             userService.updateUser(userRequest);
-
             return new ResponseEntity<>("User updated! ", HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             System.out.println(ex.getMessage());

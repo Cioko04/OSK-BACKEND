@@ -1,15 +1,20 @@
-package com.example.osk.authentication;
+package com.example.osk.authentication.service;
 
-import com.example.osk.configuration.JwtService;
+import com.example.osk.authentication.AuthenticationRequest;
+import com.example.osk.authentication.AuthenticationResponse;
+import com.example.osk.authentication.RegisterRequest;
+import com.example.osk.configuration.service.JwtService;
 import com.example.osk.token.Token;
-import com.example.osk.token.TokenRepository;
 import com.example.osk.token.TokenType;
+import com.example.osk.token.repository.TokenRepository;
 import com.example.osk.user.Role;
 import com.example.osk.user.User;
-import com.example.osk.user.UserRepository;
+import com.example.osk.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,15 +23,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    @Override
+    public void register(RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .secondName(request.getSecondName())
@@ -36,14 +43,10 @@ public class AuthenticationService {
                 .dob(request.getDob())
                 .role(Role.USER)
                 .build();
-        User savedUser = userRepository.save(user);
-        String jwtToken = jwtService.generateToken(user);
-        saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        userRepository.save(user);
     }
 
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -54,23 +57,27 @@ public class AuthenticationService {
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + request.getEmail()));
         String jwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
+        deleteUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    private void revokeAllUserTokens(User user) {
+    @Override
+    public boolean checkTokenValidity(String token, String email) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        token = token.substring(7);
+        boolean isTokenValid = tokenRepository.findByToken(token).isPresent();
+        return jwtService.isTokenValid(token, userDetails) && isTokenValid;
+    }
+
+    private void deleteUserTokens(User user) {
         List<Token> validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
         if (validUserTokens.isEmpty()) {
             return;
         }
-        validUserTokens.forEach(t -> {
-            t.setExpired(true);
-            t.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
+        tokenRepository.deleteAll(validUserTokens);
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -78,8 +85,6 @@ public class AuthenticationService {
                 .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
-                .revoked(false)
-                .expired(false)
                 .build();
         tokenRepository.save(token);
     }

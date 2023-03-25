@@ -1,7 +1,6 @@
-package com.example.osk.configuration;
+package com.example.osk.configuration.service;
 
-import com.example.osk.token.Token;
-import com.example.osk.token.TokenRepository;
+import com.example.osk.token.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -29,12 +28,7 @@ public class LogoutService implements LogoutHandler {
 
         jwt = authHeader.substring(7);
 
-        Token storedToken = tokenRepository.findByToken(jwt).orElse(null);
+        tokenRepository.findByToken(jwt).ifPresent(tokenRepository::delete);
 
-        if (storedToken != null) {
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
-        }
     }
 }
