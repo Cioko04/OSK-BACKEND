@@ -1,7 +1,6 @@
 package com.example.osk.authentication.controller;
 
 import com.example.osk.authentication.AuthenticationRequest;
-import com.example.osk.authentication.AuthenticationResponse;
 import com.example.osk.authentication.RegisterRequest;
 import com.example.osk.authentication.service.AuthenticationServiceImpl;
 import com.example.osk.user.service.UserService;
@@ -41,7 +40,7 @@ public class AuthenticationController {
 
     @GetMapping("/checkTokenValidity")
     public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader(HttpHeaders.AUTHORIZATION) String request, @RequestParam("email") String userEmail) {
-        return new ResponseEntity<>(authenticationService.checkTokenValidity(request, userEmail), HttpStatus.OK);
+            return new ResponseEntity<>(authenticationService.checkTokenValidity(request, userEmail), HttpStatus.OK);
     }
 
     @GetMapping(path = "/checkEmail")
