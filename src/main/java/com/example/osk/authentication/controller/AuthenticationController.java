@@ -19,16 +19,6 @@ public class AuthenticationController {
     private final AuthenticationServiceImpl authenticationService;
     private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        try {
-            authenticationService.register(request);
-            return new ResponseEntity<>("User registered!", HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>("Failed to register user!", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
         try {

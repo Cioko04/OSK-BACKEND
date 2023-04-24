@@ -1,5 +1,6 @@
 package com.example.osk.authentication;
 
+import com.example.osk.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class RegisterRequest {
     private String email;
     private String password;
     private LocalDate dob;
+    private Role role;
 }
 

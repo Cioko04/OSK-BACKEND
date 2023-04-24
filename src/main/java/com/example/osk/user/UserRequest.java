@@ -10,23 +10,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserRequest {
     private Long id;
-    private String name;
-    private String secondName;
-    private String lastName;
     private String email;
     private String password;
-    private LocalDate dob;
-    private Integer age;
+    private Role role;
 
 
     public UserRequest(User user){
-        this.id = user.getId();
-        this.name = user.getName();
-        this.secondName = user.getSecondName();
-        this.lastName = user.getLastName();
+        this.id = user.getId();;
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.dob = user.getDob();
-        this.age = user.getAge();
+        this.role = user.getRole();
     }
 }

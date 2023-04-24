@@ -8,15 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserRequest> getStudents();
-
-    UserRequest getUser(Long id);
-
-    UserRequest getUser(String email);
-
     User saveUser(UserRequest userRequest);
-
-    void deleteUser(Long id);
 
     boolean existsByEmail(String email);
 

@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping(path = "/users", produces = "application/json")
+@RequestMapping(path = "/users")
 public class UserController {
 
     private final UserService userService;
@@ -21,22 +20,6 @@ public class UserController {
     @Autowired
     public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserRequest>> getUsers() {
-        return new ResponseEntity<>(userService.getStudents(), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "{email}")
-    public ResponseEntity<UserRequest> getUser(@PathVariable("email") String email) {
-        return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
-        userService.deleteUser(userId);
-        return new ResponseEntity<>("User deleted! ", HttpStatus.OK);
     }
 
     @PutMapping(path = "update/{id}")

@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**")
+                .antMatchers("/auth/**", "/common-users/register")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

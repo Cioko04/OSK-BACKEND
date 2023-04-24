@@ -1,8 +1,7 @@
 package com.example.osk.user;
 
 
-import com.example.osk.model.Category;
-import com.example.osk.model.Course;
+import com.example.osk.commonUser.CommonUser;
 import com.example.osk.token.Token;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,46 +32,21 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    private String name;
-    private String secondName;
-    @NotNull
-    private String lastName;
-    @NotNull
     private String email;
     @NotNull
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @NotNull
-    private LocalDate dob;
-    @Transient
-    private Integer age;
+
+    @OneToOne(mappedBy = "user")
+    private CommonUser commonUser;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
-    @OneToMany(mappedBy = "student")
-    private List<Course> courses = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "instructors_category",
-            joinColumns = @JoinColumn(name = "instructor_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categoryList = new ArrayList<>();
-
     public User(UserRequest userRequest) {
-        this.name = userRequest.getName();
-        this.secondName = userRequest.getSecondName();
-        this.lastName = userRequest.getLastName();
         this.email = userRequest.getEmail();
         this.password = userRequest.getPassword();
-        this.dob = userRequest.getDob();
-    }
-
-    public Integer getAge() {
-        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     @Override

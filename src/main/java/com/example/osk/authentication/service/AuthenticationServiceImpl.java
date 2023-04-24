@@ -35,13 +35,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void register(RegisterRequest request) {
         User user = User.builder()
-                .name(request.getName())
-                .secondName(request.getSecondName())
-                .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .dob(request.getDob())
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         userRepository.save(user);
     }
