@@ -16,17 +16,6 @@ import java.util.NoSuchElementException;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRequest request) {
-        try {
-            request.setRole(Role.USER);
-            userService.saveUser(request);
-            return new ResponseEntity<>("User registered!", HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>("Failed to register user!", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping(path = "/getUserByEmail")
     public ResponseEntity<?> getUser(@RequestParam("email") String email) {
         try {

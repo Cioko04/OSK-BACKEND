@@ -19,14 +19,4 @@ public class SchoolController {
     public ResponseEntity<List<SchoolRequest>> getSchools() {
         return new ResponseEntity<>(schoolService.getSchools(), HttpStatus.OK);
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody SchoolRequest request) {
-        try {
-            schoolService.saveSchool(request);
-            return new ResponseEntity<>("School registered!", HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>("Failed to register school!", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
