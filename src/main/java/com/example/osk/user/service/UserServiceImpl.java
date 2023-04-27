@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -21,8 +19,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     private User getUserById(Long id) {
-        return userRepository.findUserByCommonUserId(id).orElseThrow(() -> new IllegalStateException(
+        return userRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "User with id " + id + " does not exist"));
+    }
+
+    @Override
+    public UserRequest getUser(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to find user with email " + email));
+        return new UserRequest(user);
     }
 
     @Override
@@ -30,7 +35,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = User.builder()
                 .email(userRequest.getEmail())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
-                .role(Role.USER)
+                .role(userRequest.getRole())
+                .name(userRequest.getName())
+                .secondName(userRequest.getSecondName())
+                .lastName(userRequest.getLastName())
+                .dob(userRequest.getDob())
                 .build();
         return userRepository.save(user);
     }
@@ -55,7 +64,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 !Objects.equals(user.getPassword(), userRequest.getPassword())) {
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
-
+        if (userRequest.getName() != null &&
+                userRequest.getName().length() > 0 &&
+                !Objects.equals(user.getName(), userRequest.getName())) {
+            user.setName(userRequest.getName());
+        }
+        if (userRequest.getSecondName() != null &&
+                userRequest.getSecondName().length() > 0 &&
+                !Objects.equals(user.getSecondName(), userRequest.getSecondName())) {
+            user.setSecondName(userRequest.getSecondName());
+        }
+        if (userRequest.getLastName() != null &&
+                userRequest.getLastName().length() > 0 &&
+                !Objects.equals(user.getLastName(), userRequest.getLastName())) {
+            user.setLastName(userRequest.getLastName());
+        }
+        if (userRequest.getDob() != null &&
+                !Objects.equals(user.getDob(), userRequest.getDob())) {
+            user.setDob(userRequest.getDob());
+        }
         userRepository.save(user);
     }
 

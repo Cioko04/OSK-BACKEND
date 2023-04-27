@@ -4,9 +4,10 @@ import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 public interface UserService {
+
+    UserRequest getUser(String email);
 
     User saveUser(UserRequest userRequest);
 

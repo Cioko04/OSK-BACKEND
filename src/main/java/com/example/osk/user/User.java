@@ -1,7 +1,7 @@
 package com.example.osk.user;
 
 
-import com.example.osk.commonUser.CommonUser;
+import com.example.osk.school.School;
 import com.example.osk.token.Token;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -37,9 +39,18 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @NotNull
+    private String name;
+    private String secondName;
+    @NotNull
+    private String lastName;
+    @NotNull
+    private LocalDate dob;
+    @Transient
+    private Integer age;
 
     @OneToOne(mappedBy = "user")
-    private CommonUser commonUser;
+    private School school;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
@@ -47,6 +58,10 @@ public class User implements UserDetails {
     public User(UserRequest userRequest) {
         this.email = userRequest.getEmail();
         this.password = userRequest.getPassword();
+        this.name = userRequest.getName();
+        this.secondName = userRequest.getSecondName();
+        this.lastName = userRequest.getLastName();
+        this.dob = userRequest.getDob();
     }
 
     @Override
@@ -82,5 +97,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Integer getAge() {
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 }
