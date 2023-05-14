@@ -1,6 +1,6 @@
 package com.example.osk.user.service;
 
-import com.example.osk.user.Role;
+import com.example.osk.school.service.SchoolService;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 import com.example.osk.user.repository.UserRepository;
@@ -10,12 +10,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import javax.transaction.TransactionalException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
+    private final SchoolService schoolService;
     private final PasswordEncoder passwordEncoder;
 
     private User getUserById(Long id) {
@@ -31,16 +37,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(UserRequest userRequest) {
-        User user = User.builder()
-                .email(userRequest.getEmail())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .role(userRequest.getRole())
-                .name(userRequest.getName())
-                .secondName(userRequest.getSecondName())
-                .lastName(userRequest.getLastName())
-                .dob(userRequest.getDob())
-                .build();
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + email));
+    }
+
+    @Override
+    public List<UserRequest> getUsersWithSchool() {
+        Set<User> usersWithSchool = userRepository.findUsersWithSchool();
+        return usersWithSchool.stream().map(UserRequest::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
@@ -50,9 +59,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void updateUser(UserRequest userRequest) {
+    public void updateUser(Long id, UserRequest userRequest) {
 
-        User user = getUserById(userRequest.getId());
+        User user = getUserById(id);
 
         if (userRequest.getEmail() != null &&
                 userRequest.getEmail().length() > 0 &&
@@ -84,6 +93,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setDob(userRequest.getDob());
         }
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = getUserById(id);
+        if (user.getSchool() != null) {
+            schoolService.deleteSchool(user.getSchool().getId());
+        }
+        userRepository.delete(user);
     }
 
     @Override

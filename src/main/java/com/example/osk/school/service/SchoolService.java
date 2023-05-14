@@ -1,5 +1,6 @@
 package com.example.osk.school.service;
 
+import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 
 import java.util.List;
@@ -10,6 +11,10 @@ public interface SchoolService {
 
     SchoolRequest getSchool(String email);
 
-    void saveSchool(SchoolRequest schoolRequest);
+    School saveSchool(School school);
+
+    void updateSchool(Long id, SchoolRequest schoolRequest);
+
+    void deleteSchool(Long id);
 
 }

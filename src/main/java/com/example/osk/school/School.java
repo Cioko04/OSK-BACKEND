@@ -23,8 +23,6 @@ public class School {
     @NotNull
     private String schoolName;
     @NotNull
-    private String owner;
-    @NotNull
     private String city;
     @NotNull
     private String zipCode;
@@ -38,7 +36,6 @@ public class School {
 
     public School(SchoolRequest schoolRequest) {
         this.schoolName = schoolRequest.getSchoolName();
-        this.owner = schoolRequest.getOwner();
         this.city = schoolRequest.getCity();
         this.zipCode = schoolRequest.getZipCode();
         this.nip = schoolRequest.getNip();

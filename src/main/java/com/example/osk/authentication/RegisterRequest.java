@@ -1,5 +1,6 @@
 package com.example.osk.authentication;
 
+import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +14,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+    private String email;
+    private String password;
     private String name;
     private String secondName;
     private String lastName;
-    private String email;
-    private String password;
     private LocalDate dob;
-    private Role role;
+    private Integer age;
+    private SchoolRequest schoolRequest;
 }
 
