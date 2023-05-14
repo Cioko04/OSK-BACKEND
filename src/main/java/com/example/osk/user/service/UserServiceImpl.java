@@ -96,13 +96,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
     public void deleteUser(Long id) {
-        User user = getUserById(id);
-        if (user.getSchool() != null) {
-            schoolService.deleteSchool(user.getSchool().getId());
-        }
-        userRepository.delete(user);
+        userRepository.deleteById(id);
     }
 
     @Override

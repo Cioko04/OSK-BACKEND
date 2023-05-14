@@ -34,4 +34,10 @@ public class SchoolController {
         }
 
     }
+
+
+    @DeleteMapping(path = "delete/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        schoolService.deleteSchool(id);
+    }
 }
