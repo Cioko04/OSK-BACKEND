@@ -1,7 +1,10 @@
 package com.example.osk.user;
 
-import com.example.osk.school.SchoolRequest;
-import lombok.*;
+import com.example.osk.authentication.RegisterRequest;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -18,10 +21,9 @@ public class UserRequest {
     private String lastName;
     private LocalDate dob;
     private Integer age;
-    private SchoolRequest schoolRequest;
+    private Role role;
 
-
-    public UserRequest(User user){
+    public UserRequest(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
@@ -29,9 +31,17 @@ public class UserRequest {
         this.secondName = user.getSecondName();
         this.lastName = user.getLastName();
         this.dob = user.getDob();
+        this.role = user.getRole();
         this.age = user.getAge();
-        if (user.getSchool() != null) {
-            this.schoolRequest = new SchoolRequest(user.getSchool());
-        }
+    }
+
+    public UserRequest(RegisterRequest request) {
+        this.email = request.getEmail();
+        this.password = request.getPassword();
+        this.name = request.getName();
+        this.secondName = request.getSecondName();
+        this.lastName = request.getLastName();
+        this.dob = request.getDob();
+        this.role = Role.USER;
     }
 }

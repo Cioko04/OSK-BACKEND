@@ -1,6 +1,5 @@
 package com.example.osk.authentication;
 
-import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +19,5 @@ public class RegisterRequest {
     private String secondName;
     private String lastName;
     private LocalDate dob;
-    private Integer age;
-    private SchoolRequest schoolRequest;
 }
 

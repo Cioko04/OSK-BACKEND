@@ -1,6 +1,7 @@
 package com.example.osk.user;
 
 
+import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import com.example.osk.token.Token;
 import lombok.*;
@@ -52,6 +53,9 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private School school;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Instructor instructor;
+
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
@@ -62,6 +66,7 @@ public class User implements UserDetails {
         this.secondName = userRequest.getSecondName();
         this.lastName = userRequest.getLastName();
         this.dob = userRequest.getDob();
+        this.role = userRequest.getRole();
     }
 
     @Override

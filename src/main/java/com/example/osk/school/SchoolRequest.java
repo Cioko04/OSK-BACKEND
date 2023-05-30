@@ -17,6 +17,7 @@ public class SchoolRequest {
     private String zipCode;
     private String nip;
     private LocalDate addDate;
+    private UserRequest userRequest;
 
     public SchoolRequest(School school) {
         this.id = school.getId();
@@ -25,5 +26,6 @@ public class SchoolRequest {
         this.zipCode = school.getZipCode();
         this.nip = school.getNip();
         this.addDate = school.getAddDate();
+        this.userRequest = new UserRequest(school.getUser());
     }
 }

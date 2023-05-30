@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import javax.transaction.TransactionalException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
-    private final SchoolService schoolService;
     private final PasswordEncoder passwordEncoder;
 
     private User getUserById(Long id) {
@@ -37,6 +37,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + email));
@@ -49,7 +54,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(UserRequest userRequest) {
+        User user = User.builder()
+                .name(userRequest.getName())
+                .secondName(userRequest.getSecondName())
+                .lastName(userRequest.getLastName())
+                .email(userRequest.getEmail())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
+                .dob(userRequest.getDob())
+                .role(userRequest.getRole())
+                .build();
         return userRepository.save(user);
     }
 
@@ -59,8 +73,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void updateUser(Long id, UserRequest userRequest) {
-
         User user = getUserById(id);
 
         if (userRequest.getEmail() != null &&

@@ -32,9 +32,9 @@ public class AuthenticationController {
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         try {
             authenticationService.register(request);
-            return new ResponseEntity<>("User registered!", HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e) {
-            return new ResponseEntity<>("Failed to register user!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

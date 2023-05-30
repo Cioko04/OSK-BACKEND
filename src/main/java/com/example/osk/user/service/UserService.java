@@ -4,6 +4,7 @@ import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -11,9 +12,11 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
+    Optional<User> findUserById(Long id);
+
     List<UserRequest> getUsersWithSchool();
 
-    User saveUser(User user);
+    User saveUser(UserRequest userRequest);
 
     boolean existsByEmail(String email);
 
