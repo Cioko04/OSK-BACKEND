@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
 @RequestMapping(path = "/user")
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @GetMapping(path = "/getUserByEmail")
     public ResponseEntity<?> getUser(@RequestParam("email") String email) {
@@ -29,12 +27,11 @@ public class UserController {
         }
     }
 
-    @PutMapping(path = "update/{id}")
+    @PutMapping(path = "/updateUser")
     public ResponseEntity<String> updateUser(
-            @PathVariable("id") Long id,
             @RequestBody UserRequest userRequest) {
         try {
-            userService.updateUser(id, userRequest);
+            userService.updateUser(userRequest);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

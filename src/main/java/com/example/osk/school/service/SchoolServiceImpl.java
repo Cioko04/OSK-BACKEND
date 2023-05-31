@@ -64,8 +64,9 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Transactional
     public void updateSchool(SchoolRequest schoolRequest) {
-        School school = schoolRepository.findById(schoolRequest.getId()).orElseThrow(() -> new IllegalStateException(
+        School school = getSchoolById(schoolRequest.getId()).orElseThrow(() -> new IllegalStateException(
                 "User with id " + schoolRequest.getId() + " does not exist"));
 
         if (schoolRequest.getSchoolName() != null &&

@@ -1,6 +1,7 @@
 package com.example.osk.user;
 
 import com.example.osk.authentication.RegisterRequest;
+import com.example.osk.school.SchoolRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class UserRequest {
     private LocalDate dob;
     private Integer age;
     private Role role;
+    private SchoolRequest schoolRequest;
 
     public UserRequest(User user) {
         this.id = user.getId();

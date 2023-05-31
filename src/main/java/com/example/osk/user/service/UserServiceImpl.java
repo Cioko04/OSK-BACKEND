@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, UserRequest userRequest) {
-        User user = getUserById(id);
+    public void updateUser(UserRequest userRequest) {
+        User user = getUserById(userRequest.getId());
 
         if (userRequest.getEmail() != null &&
                 userRequest.getEmail().length() > 0 &&

@@ -20,7 +20,7 @@ public interface UserService {
 
     boolean existsByEmail(String email);
 
-    void updateUser(Long id, UserRequest userRequest);
+    void updateUser(UserRequest userRequest);
 
     void deleteUser(Long id);
 }
