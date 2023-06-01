@@ -26,6 +26,5 @@ public class SchoolRequest {
         this.zipCode = school.getZipCode();
         this.nip = school.getNip();
         this.addDate = school.getAddDate();
-        this.userRequest = new UserRequest(school.getUser());
     }
 }

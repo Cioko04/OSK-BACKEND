@@ -19,11 +19,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(path = "/getUserByEmail")
-    public ResponseEntity<?> getUser(@RequestParam("email") String email) {
+    public ResponseEntity<UserRequest> getUser(@RequestParam("email") String email) {
         try {
             return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to register user!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

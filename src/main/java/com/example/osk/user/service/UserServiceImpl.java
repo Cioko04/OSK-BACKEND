@@ -1,5 +1,6 @@
 package com.example.osk.user.service;
 
+import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.service.SchoolService;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
@@ -33,7 +34,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserRequest getUser(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to find user with email " + email));
-        return new UserRequest(user);
+        UserRequest userRequest = new UserRequest(user);
+        if (user.getSchool() != null) {
+            userRequest.setSchoolRequest(new SchoolRequest(user.getSchool()));
+        }
+        return userRequest;
     }
 
     @Override

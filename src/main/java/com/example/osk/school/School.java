@@ -37,7 +37,7 @@ public class School {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "school", cascade = CascadeType.ALL)
     private Set<Instructor> instructors;
 
     public School(SchoolRequest schoolRequest) {

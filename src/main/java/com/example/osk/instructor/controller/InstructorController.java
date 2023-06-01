@@ -15,8 +15,8 @@ import java.util.List;
 public class InstructorController {
     private final InstructorService instructorService;
 
-    @GetMapping(path = "/getInstructorsBySchoolId/{id}")
-    public ResponseEntity<List<InstructorRequest>> getInstructors(@PathVariable("id") Long id) {
+    @GetMapping(path = "/getInstructorsBySchool/{id}")
+    public ResponseEntity<List<InstructorRequest>> getInstructorsBySchoolId(@PathVariable("id") Long id) {
         return new ResponseEntity<>(instructorService.getInstructorsBySchoolId(id), HttpStatus.OK);
     }
 

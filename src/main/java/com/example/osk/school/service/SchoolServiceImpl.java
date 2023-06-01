@@ -27,8 +27,14 @@ public class SchoolServiceImpl implements SchoolService {
     public List<SchoolRequest> getSchools() {
         List<School> schools = schoolRepository.findAll();
         List<SchoolRequest> schoolRequests = new ArrayList<>();
-        schools.forEach(school -> schoolRequests.add(new SchoolRequest(school)));
+        schools.forEach(school -> schoolRequests.add(createSchoolRequestWithUser(school)));
         return schoolRequests;
+    }
+
+    private SchoolRequest createSchoolRequestWithUser(School school) {
+        SchoolRequest schoolRequest = new SchoolRequest(school);
+        schoolRequest.setUserRequest(new UserRequest(school.getUser()));
+        return schoolRequest;
     }
 
     @Override
@@ -66,6 +72,10 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     @Transactional
     public void updateSchool(SchoolRequest schoolRequest) {
+        if (schoolRequest.getUserRequest() != null) {
+            userService.updateUser(schoolRequest.getUserRequest());
+        }
+
         School school = getSchoolById(schoolRequest.getId()).orElseThrow(() -> new IllegalStateException(
                 "User with id " + schoolRequest.getId() + " does not exist"));
 
