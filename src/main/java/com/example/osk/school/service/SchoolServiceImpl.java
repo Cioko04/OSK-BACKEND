@@ -57,7 +57,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public School saveSchool(SchoolRequest schoolRequest) {
+    public void saveSchool(SchoolRequest schoolRequest) {
         UserRequest userRequest = schoolRequest.getUserRequest();
         userRequest.setRole(Role.OSK_ADMIN);
         User user = userService.saveUser(userRequest);
@@ -70,7 +70,7 @@ public class SchoolServiceImpl implements SchoolService {
                 .addDate(LocalDate.now())
                 .user(user)
                 .build();
-        return schoolRepository.save(school);
+        schoolRepository.save(school);
     }
 
     @Override

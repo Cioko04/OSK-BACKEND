@@ -1,5 +1,6 @@
 package com.example.osk.category;
 
+import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import lombok.*;
 
@@ -18,7 +19,7 @@ import java.util.Set;
         name = "categories",
         uniqueConstraints = @UniqueConstraint(
         name = "type_unique",
-        columnNames = "categoryType"
+        columnNames = "category_type"
 )
 )
 public class Category {
@@ -27,9 +28,13 @@ public class Category {
     private Long id;
     @NotNull
     private int duration;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category_type")
     private CategoryType categoryType;
 
     @ManyToMany(mappedBy = "categories")
     private Set<School> schools = new HashSet<>();
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Instructor> instructors = new HashSet<>();
 }

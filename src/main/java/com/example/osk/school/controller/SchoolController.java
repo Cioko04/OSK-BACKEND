@@ -3,7 +3,6 @@ package com.example.osk.school.controller;
 import com.example.osk.category.CategoryType;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.service.SchoolService;
-import com.example.osk.user.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class SchoolController {
         try {
             schoolService.saveSchool(schoolRequest);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -46,7 +45,7 @@ public class SchoolController {
     }
 
     @PutMapping(path = "/addCategoryToSchool")
-    public ResponseEntity<String> addCategoryToSchool(@RequestParam Long schoolId,@RequestParam CategoryType categoryType) {
+    public ResponseEntity<String> addCategoryToSchool(@RequestParam Long schoolId, @RequestParam CategoryType categoryType) {
         try {
             schoolService.addCategoryToSchool(schoolId, categoryType);
             return new ResponseEntity<>(HttpStatus.OK);
