@@ -10,4 +10,6 @@ public interface InstructorService {
     Instructor saveInstructor(InstructorRequest instructorRequest);
 
     List<InstructorRequest> getInstructorsBySchoolId(Long id);
+
+    void deleteInstructorById(Long id);
 }

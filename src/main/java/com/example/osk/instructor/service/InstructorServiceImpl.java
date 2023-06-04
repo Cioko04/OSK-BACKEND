@@ -44,4 +44,9 @@ public class InstructorServiceImpl implements InstructorService {
         return instructorRepository.save(instructor);
     }
 
+    @Override
+    public void deleteInstructorById(Long id) {
+        instructorRepository.deleteById(id);
+    }
+
 }
