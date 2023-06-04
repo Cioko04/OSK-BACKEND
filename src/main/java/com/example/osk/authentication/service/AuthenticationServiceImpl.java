@@ -9,41 +9,31 @@ import com.example.osk.token.TokenType;
 import com.example.osk.token.repository.TokenRepository;
 import com.example.osk.user.Role;
 import com.example.osk.user.User;
-import com.example.osk.user.repository.UserRepository;
+import com.example.osk.user.UserRequest;
+import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
 
     @Override
+    @Transactional
     public void register(RegisterRequest request) {
-        User user = User.builder()
-                .name(request.getName())
-                .secondName(request.getSecondName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .dob(request.getDob())
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
+        UserRequest userRequest = new UserRequest(request);
+        userService.saveUser(userRequest);
     }
 
     @Override
@@ -54,22 +44,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         request.getPassword()
                 )
         );
-        User user = userRepository.findUserByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Faile to find user with email " + request.getEmail()));
+        User user = userService.findUserByEmail(request.getEmail());
         String jwtToken = jwtService.generateToken(user);
         deleteUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
-    }
-
-    @Override
-    public boolean checkTokenValidity(String token, String email) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        token = token.substring(7);
-        boolean isTokenValid = tokenRepository.findByToken(token).isPresent();
-        return jwtService.isTokenValid(token, userDetails) && isTokenValid;
     }
 
     private void deleteUserTokens(User user) {

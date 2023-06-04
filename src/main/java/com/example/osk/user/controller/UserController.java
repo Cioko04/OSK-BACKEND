@@ -1,55 +1,51 @@
 package com.example.osk.user.controller;
 
+import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
+import com.example.osk.user.repository.UserRepository;
 import com.example.osk.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping(path = "/users", produces = "application/json")
+@RequiredArgsConstructor
+@RequestMapping(path = "/user")
 public class UserController {
-
     private final UserService userService;
 
-    @Autowired
-    public UserController(@Qualifier("userServiceImpl") UserService userService) {
-        this.userService = userService;
+    @GetMapping(path = "/getUserByEmail")
+    public ResponseEntity<UserRequest> getUser(@RequestParam("email") String email) {
+        try {
+            return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserRequest>> getUsers() {
-        return new ResponseEntity<>(userService.getStudents(), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "{email}")
-    public ResponseEntity<UserRequest> getUser(@PathVariable("email") String email) {
-        return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
-        userService.deleteUser(userId);
-        return new ResponseEntity<>("User deleted! ", HttpStatus.OK);
-    }
-
-    @PutMapping(path = "update/{id}")
+    @PutMapping(path = "/updateUser")
     public ResponseEntity<String> updateUser(
-            @PathVariable("id") Long id,
             @RequestBody UserRequest userRequest) {
         try {
             userService.updateUser(userRequest);
-            return new ResponseEntity<>("User updated! ", HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
-            System.out.println(ex.getMessage());
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @DeleteMapping(path = "deleteById/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        Optional<User> user = userService.findUserById(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<>("Failed to delete user!", HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

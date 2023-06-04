@@ -1,5 +1,6 @@
 package com.example.osk.configuration;
 
+import com.example.osk.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,8 +45,12 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**")
+                .antMatchers("**")
                 .permitAll()
+//                .antMatchers("/auth/**")
+//                .permitAll()
+//                .antMatchers("/school/delete/*")
+//                .hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
