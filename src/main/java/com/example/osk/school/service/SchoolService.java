@@ -1,6 +1,7 @@
 package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.UserRequest;
@@ -20,7 +21,7 @@ public interface SchoolService {
 
     School saveSchool(SchoolRequest schoolRequest);
 
-    void addCategoryById(Long schoolId, Long categoryId);
+    void addCategoryToSchool(Long schoolId, CategoryType categoryType);
 
     void updateSchool(SchoolRequest schoolRequest);
 

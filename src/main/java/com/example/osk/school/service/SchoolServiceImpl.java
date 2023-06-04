@@ -1,6 +1,7 @@
 package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
@@ -17,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -75,9 +75,9 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     @Transactional
-    public void addCategoryById(Long schoolId, Long categoryId) {
+    public void addCategoryToSchool(Long schoolId, CategoryType categoryType) {
         School school = getSchoolById(schoolId);
-        Category category = categoryService.getCategoryById(categoryId);
+        Category category = categoryService.getCategory(categoryType);
         school.addCategory(category);
         schoolRepository.save(school);
     }

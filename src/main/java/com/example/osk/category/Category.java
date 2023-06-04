@@ -15,7 +15,11 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(
-        name = "categories"
+        name = "categories",
+        uniqueConstraints = @UniqueConstraint(
+        name = "type_unique",
+        columnNames = "categoryType"
+)
 )
 public class Category {
     @Id
