@@ -1,5 +1,7 @@
 package com.example.osk.school.service;
 
+import com.example.osk.category.Category;
+import com.example.osk.category.service.CategoryService;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.repository.SchoolRepository;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class SchoolServiceImpl implements SchoolService {
     private final SchoolRepository schoolRepository;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Override
     public List<SchoolRequest> getSchools() {
@@ -38,8 +41,9 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public Optional<School> getSchoolById(Long id) {
-        return schoolRepository.findById(id);
+    public School getSchoolById(Long id) {
+        return schoolRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+                "School with id " + id + " does not exist"));
     }
 
     @Override
@@ -71,13 +75,21 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     @Transactional
+    public void addCategoryById(Long schoolId, Long categoryId) {
+        School school = getSchoolById(schoolId);
+        Category category = categoryService.getCategoryById(categoryId);
+        school.addCategory(category);
+        schoolRepository.save(school);
+    }
+
+    @Override
+    @Transactional
     public void updateSchool(SchoolRequest schoolRequest) {
         if (schoolRequest.getUserRequest() != null) {
             userService.updateUser(schoolRequest.getUserRequest());
         }
 
-        School school = getSchoolById(schoolRequest.getId()).orElseThrow(() -> new IllegalStateException(
-                "User with id " + schoolRequest.getId() + " does not exist"));
+        School school = getSchoolById(schoolRequest.getId());
 
         if (schoolRequest.getSchoolName() != null &&
                 schoolRequest.getSchoolName().length() > 0 &&

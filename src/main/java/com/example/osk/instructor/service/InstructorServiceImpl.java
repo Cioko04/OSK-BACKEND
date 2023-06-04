@@ -32,8 +32,7 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Instructor saveInstructor(InstructorRequest instructorRequest) {
-        School school = schoolService.getSchoolById(instructorRequest.getSchoolId())
-                .orElseThrow(() -> new EntityNotFoundException("School with id: " + instructorRequest.getSchoolId() + "doesn't exists!"));
+        School school = schoolService.getSchoolById(instructorRequest.getSchoolId());
         UserRequest userRequest = instructorRequest.getUserRequest();
         userRequest.setRole(Role.INSTRUCTOR);
         User user = userService.saveUser(userRequest);

@@ -1,5 +1,6 @@
 package com.example.osk.school.service;
 
+import com.example.osk.category.Category;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.UserRequest;
@@ -11,13 +12,15 @@ public interface SchoolService {
 
     List<SchoolRequest> getSchools();
 
-    Optional<School> getSchoolById(Long id);
+    School getSchoolById(Long id);
 
     SchoolRequest getSchool(String email);
 
     List<UserRequest> getInstructors(Long id);
 
     School saveSchool(SchoolRequest schoolRequest);
+
+    void addCategoryById(Long schoolId, Long categoryId);
 
     void updateSchool(SchoolRequest schoolRequest);
 
