@@ -1,5 +1,6 @@
 package com.example.osk.instructor.controller;
 
+import com.example.osk.category.CategoryType;
 import com.example.osk.instructor.InstructorRequest;
 import com.example.osk.instructor.service.InstructorService;
 import com.example.osk.user.User;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -29,6 +31,16 @@ public class InstructorController {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(path = "/addCategoryToInstructor")
+    public ResponseEntity<String> addCategoryToInstructor(@RequestParam Long instructorId, @RequestParam CategoryType categoryType) {
+        try {
+            instructorService.addCategoryToInstructor(instructorId, categoryType);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

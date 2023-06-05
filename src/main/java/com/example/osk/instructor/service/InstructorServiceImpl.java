@@ -1,5 +1,8 @@
 package com.example.osk.instructor.service;
 
+import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
+import com.example.osk.category.service.CategoryService;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.instructor.InstructorRequest;
 import com.example.osk.instructor.repository.InstructorRepository;
@@ -12,7 +15,7 @@ import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,6 +26,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final InstructorRepository instructorRepository;
     private final SchoolService schoolService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Override
     public List<InstructorRequest> getInstructorsBySchoolId(Long id) {
@@ -31,9 +35,18 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
-    public Instructor saveInstructor(InstructorRequest instructorRequest) {
-        School school = schoolService.getSchoolById(instructorRequest.getSchoolId())
-                .orElseThrow(() -> new EntityNotFoundException("School with id: " + instructorRequest.getSchoolId() + "doesn't exists!"));
+    @Transactional
+    public void addCategoryToInstructor(Long instructorId, CategoryType categoryType) {
+        Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(() -> new IllegalStateException(
+                "Instructor with id " + instructorId + " does not exist"));
+        Category category = categoryService.getCategory(categoryType);
+        instructor.addCategory(category);
+        instructorRepository.save(instructor);
+    }
+
+    @Override
+    public void saveInstructor(InstructorRequest instructorRequest) {
+        School school = schoolService.getSchoolById(instructorRequest.getSchoolId());
         UserRequest userRequest = instructorRequest.getUserRequest();
         userRequest.setRole(Role.INSTRUCTOR);
         User user = userService.saveUser(userRequest);
@@ -41,7 +54,7 @@ public class InstructorServiceImpl implements InstructorService {
                 .school(school)
                 .user(user)
                 .build();
-        return instructorRepository.save(instructor);
+        instructorRepository.save(instructor);
     }
 
     @Override
