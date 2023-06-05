@@ -1,5 +1,6 @@
 package com.example.osk.category;
 
+import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import lombok.*;
@@ -31,6 +32,9 @@ public class Category {
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type")
     private CategoryType categoryType;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL)
+    private Set<Course> courses = new HashSet<>();
 
     @ManyToMany(mappedBy = "categories")
     private Set<School> schools = new HashSet<>();

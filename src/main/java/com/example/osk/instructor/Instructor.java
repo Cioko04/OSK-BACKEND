@@ -1,6 +1,7 @@
 package com.example.osk.instructor;
 
 import com.example.osk.category.Category;
+import com.example.osk.course.Course;
 import com.example.osk.school.School;
 import com.example.osk.user.User;
 import lombok.*;
@@ -26,6 +27,9 @@ public class Instructor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor", cascade = CascadeType.ALL)
+    private Set<Course> courses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="school_id")
