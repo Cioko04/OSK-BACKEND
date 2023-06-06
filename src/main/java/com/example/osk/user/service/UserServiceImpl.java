@@ -1,7 +1,6 @@
 package com.example.osk.user.service;
 
 import com.example.osk.school.SchoolRequest;
-import com.example.osk.school.service.SchoolService;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 import com.example.osk.user.repository.UserRepository;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.transaction.TransactionalException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,6 +42,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User findUserByIdIfExists(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(
+                        "User with id " + id + " does not exist"));
     }
 
     @Override

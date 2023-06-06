@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-public interface InstructorRepository extends JpaRepository<Instructor, Long> {
+public interface InstructorRepository
+        extends JpaRepository<Instructor, Long> {
 
     Set<Instructor> findAllBySchoolId(Long id);
 }

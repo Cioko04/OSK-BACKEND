@@ -32,10 +32,11 @@ public class Instructor {
     private Set<Course> courses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="school_id")
+    @JoinColumn(name = "school_id")
     private School school;
 
     @ManyToMany(
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}
     )
     @JoinTable(

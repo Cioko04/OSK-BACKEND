@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,11 +38,16 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     @Transactional
     public void addCategoryToInstructor(Long instructorId, CategoryType categoryType) {
-        Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(() -> new IllegalStateException(
-                "Instructor with id " + instructorId + " does not exist"));
+        Instructor instructor = getInstructorById(instructorId);
         Category category = categoryService.getCategory(categoryType);
         instructor.addCategory(category);
         instructorRepository.save(instructor);
+    }
+
+    @Override
+    public Instructor getInstructorById(Long id) {
+        return instructorRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+                "Instructor with id " + id + " does not exist"));
     }
 
     @Override
