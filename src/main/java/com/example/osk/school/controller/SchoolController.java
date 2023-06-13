@@ -1,6 +1,5 @@
 package com.example.osk.school.controller;
 
-import com.example.osk.category.CategoryType;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -42,16 +41,6 @@ public class SchoolController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-    }
-
-    @PutMapping(path = "/addCategoryToSchool")
-    public ResponseEntity<String> addCategoryToSchool(@RequestParam Long schoolId, @RequestParam CategoryType categoryType) {
-        try {
-            schoolService.addCategoryToSchool(schoolId, categoryType);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @DeleteMapping(path = "deleteById/{id}")

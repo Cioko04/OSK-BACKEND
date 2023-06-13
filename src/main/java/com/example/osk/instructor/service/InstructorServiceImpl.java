@@ -1,7 +1,6 @@
 package com.example.osk.instructor.service;
 
 import com.example.osk.category.Category;
-import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.instructor.InstructorRequest;
@@ -15,9 +14,7 @@ import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,15 +29,23 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     public List<InstructorRequest> getInstructorsBySchoolId(Long id) {
         Set<Instructor> instructors = instructorRepository.findAllBySchoolId(id);
-        return instructors.stream().map(InstructorRequest::new).collect(Collectors.toList());
+        return instructors.stream().map(InstructorRequest::new).toList();
     }
 
     @Override
-    @Transactional
-    public void addCategoryToInstructor(Long instructorId, CategoryType categoryType) {
-        Instructor instructor = getInstructorById(instructorId);
-        Category category = categoryService.getCategory(categoryType);
-        instructor.addCategory(category);
+    public void updateInstructor(InstructorRequest instructorRequest) {
+        if (instructorRequest.getUserRequest() != null) {
+            userService.updateUser(instructorRequest.getUserRequest());
+        }
+
+        Instructor instructor = getInstructorById(instructorRequest.getId());
+
+        if (!instructorRequest.getCategories().isEmpty()) {
+            Set<String> categoriesFromInstructor = instructor.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+            Set<String> categoriesFromRequest = instructorRequest.getCategories();
+            Set<Category> missingCategories = categoryService.getUniqueValuesFromSecondList(categoriesFromInstructor, categoriesFromRequest);
+            missingCategories.forEach(instructor::addCategory);
+        }
         instructorRepository.save(instructor);
     }
 

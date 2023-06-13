@@ -1,7 +1,6 @@
 package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
-import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
@@ -18,6 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,8 @@ public class SchoolServiceImpl implements SchoolService {
     private SchoolRequest createSchoolRequestWithUser(School school) {
         SchoolRequest schoolRequest = new SchoolRequest(school);
         schoolRequest.setUserRequest(new UserRequest(school.getUser()));
+        Set<String> categoryTypes = school.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+        schoolRequest.setCategories(categoryTypes);
         return schoolRequest;
     }
 
@@ -44,16 +47,6 @@ public class SchoolServiceImpl implements SchoolService {
     public School getSchoolById(Long id) {
         return schoolRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "School with id " + id + " does not exist"));
-    }
-
-    @Override
-    public SchoolRequest getSchool(String email) {
-        return null;
-    }
-
-    @Override
-    public List<UserRequest> getInstructors(Long id) {
-        return null;
     }
 
     @Override
@@ -70,15 +63,6 @@ public class SchoolServiceImpl implements SchoolService {
                 .addDate(LocalDate.now())
                 .user(user)
                 .build();
-        schoolRepository.save(school);
-    }
-
-    @Override
-    @Transactional
-    public void addCategoryToSchool(Long schoolId, CategoryType categoryType) {
-        School school = getSchoolById(schoolId);
-        Category category = categoryService.getCategory(categoryType);
-        school.addCategory(category);
         schoolRepository.save(school);
     }
 
@@ -110,6 +94,12 @@ public class SchoolServiceImpl implements SchoolService {
                 schoolRequest.getNip().length() > 0 &&
                 !Objects.equals(school.getNip(), schoolRequest.getNip())) {
             school.setNip(schoolRequest.getNip());
+        }
+        if (!schoolRequest.getCategories().isEmpty()) {
+            Set<String> categoriesFromSchool = school.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+            Set<String> categoriesFromRequest = schoolRequest.getCategories();
+            Set<Category> missingCategories = categoryService.getUniqueValuesFromSecondList(categoriesFromSchool, categoriesFromRequest);
+            missingCategories.forEach(school::addCategory);
         }
         schoolRepository.save(school);
     }

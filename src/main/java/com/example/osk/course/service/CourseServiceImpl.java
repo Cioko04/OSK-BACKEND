@@ -10,7 +10,6 @@ import com.example.osk.instructor.Instructor;
 import com.example.osk.instructor.service.InstructorService;
 import com.example.osk.user.User;
 import com.example.osk.user.service.UserService;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;

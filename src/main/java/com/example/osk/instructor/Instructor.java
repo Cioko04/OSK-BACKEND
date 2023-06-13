@@ -36,7 +36,6 @@ public class Instructor {
     private School school;
 
     @ManyToMany(
-            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}
     )
     @JoinTable(

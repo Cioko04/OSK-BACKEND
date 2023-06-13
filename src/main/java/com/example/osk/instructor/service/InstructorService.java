@@ -1,11 +1,9 @@
 package com.example.osk.instructor.service;
 
-import com.example.osk.category.CategoryType;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.instructor.InstructorRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface InstructorService {
 
@@ -15,7 +13,7 @@ public interface InstructorService {
 
     List<InstructorRequest> getInstructorsBySchoolId(Long id);
 
-    void addCategoryToInstructor(Long instructorId, CategoryType categoryType);
+    void updateInstructor(InstructorRequest instructorRequest);
 
     void deleteInstructorById(Long id);
 }

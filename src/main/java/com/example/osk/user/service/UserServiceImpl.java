@@ -1,5 +1,7 @@
 package com.example.osk.user.service;
 
+import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
@@ -16,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to find user with email " + email));
         UserRequest userRequest = new UserRequest(user);
         if (user.getSchool() != null) {
-            userRequest.setSchoolRequest(new SchoolRequest(user.getSchool()));
+            SchoolRequest schoolRequest = new SchoolRequest(user.getSchool());
+            Set<String> categoryTypes = user.getSchool().getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+            schoolRequest.setCategories(categoryTypes);
+            userRequest.setSchoolRequest(schoolRequest);
         }
         return userRequest;
     }
