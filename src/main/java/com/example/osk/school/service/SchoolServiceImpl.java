@@ -1,6 +1,7 @@
 package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
@@ -54,6 +55,9 @@ public class SchoolServiceImpl implements SchoolService {
         UserRequest userRequest = schoolRequest.getUserRequest();
         userRequest.setRole(Role.OSK_ADMIN);
         User user = userService.saveUser(userRequest);
+        Set<Category> categories = schoolRequest.getCategories().stream()
+                .map(category -> categoryService.getCategory(CategoryType.getCategoryTypeFromString(category)))
+                .collect(Collectors.toSet());
 
         School school = School.builder()
                 .schoolName(schoolRequest.getSchoolName())
@@ -62,6 +66,7 @@ public class SchoolServiceImpl implements SchoolService {
                 .nip(schoolRequest.getNip())
                 .addDate(LocalDate.now())
                 .user(user)
+                .categories(categories)
                 .build();
         schoolRepository.save(school);
     }
@@ -95,12 +100,10 @@ public class SchoolServiceImpl implements SchoolService {
                 !Objects.equals(school.getNip(), schoolRequest.getNip())) {
             school.setNip(schoolRequest.getNip());
         }
-        if (!schoolRequest.getCategories().isEmpty()) {
-            Set<String> categoriesFromSchool = school.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
-            Set<String> categoriesFromRequest = schoolRequest.getCategories();
-            Set<Category> missingCategories = categoryService.getUniqueValuesFromSecondList(categoriesFromSchool, categoriesFromRequest);
-            missingCategories.forEach(school::addCategory);
-        }
+
+        Set<Category> updatedCategories = categoryService.getCategoriesFromStringList(schoolRequest.getCategories());
+        school.setCategories(updatedCategories);
+
         schoolRepository.save(school);
     }
 
