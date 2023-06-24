@@ -1,6 +1,7 @@
 package com.example.osk.instructor.service;
 
 import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.instructor.InstructorRequest;
@@ -40,12 +41,9 @@ public class InstructorServiceImpl implements InstructorService {
 
         Instructor instructor = getInstructorById(instructorRequest.getId());
 
-        if (!instructorRequest.getCategories().isEmpty()) {
-            Set<String> categoriesFromInstructor = instructor.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
-            Set<String> categoriesFromRequest = instructorRequest.getCategories();
-            Set<Category> missingCategories = categoryService.getUniqueValuesFromSecondList(categoriesFromInstructor, categoriesFromRequest);
-            missingCategories.forEach(instructor::addCategory);
-        }
+        Set<Category> updatedCategories = categoryService.getCategoriesFromStringList(instructorRequest.getCategories());
+        instructor.setCategories(updatedCategories);
+
         instructorRepository.save(instructor);
     }
 
@@ -61,9 +59,14 @@ public class InstructorServiceImpl implements InstructorService {
         UserRequest userRequest = instructorRequest.getUserRequest();
         userRequest.setRole(Role.INSTRUCTOR);
         User user = userService.saveUser(userRequest);
+        Set<Category> categories = instructorRequest.getCategories().stream()
+                .map(category -> categoryService.getCategory(CategoryType.getCategoryTypeFromString(category)))
+                .collect(Collectors.toSet());
+
         Instructor instructor = Instructor.builder()
                 .school(school)
                 .user(user)
+                .categories(categories)
                 .build();
         instructorRepository.save(instructor);
     }
