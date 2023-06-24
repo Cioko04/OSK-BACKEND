@@ -5,7 +5,6 @@ import com.example.osk.authentication.RegisterRequest;
 import com.example.osk.authentication.service.AuthenticationServiceImpl;
 import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,11 +19,12 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
         try {
             return ResponseEntity.ok(authenticationService.authenticate(request));
-        }catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Failed to authenticate user!", HttpStatus.NOT_FOUND);
+        } catch (BadCredentialsException e) {
+            String errorMessage = "Failed to authenticate user!";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
         }
     }
 

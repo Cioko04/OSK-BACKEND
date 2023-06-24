@@ -1,20 +1,17 @@
 package com.example.osk.authentication.service;
 
 import com.example.osk.authentication.AuthenticationRequest;
-import com.example.osk.authentication.AuthenticationResponse;
 import com.example.osk.authentication.RegisterRequest;
 import com.example.osk.configuration.service.JwtService;
 import com.example.osk.token.Token;
 import com.example.osk.token.TokenType;
 import com.example.osk.token.repository.TokenRepository;
-import com.example.osk.user.Role;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -48,9 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         deleteUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return jwtToken;
     }
 
     private void deleteUserTokens(User user) {
