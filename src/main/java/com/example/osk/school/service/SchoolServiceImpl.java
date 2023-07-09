@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,8 +36,6 @@ public class SchoolServiceImpl implements SchoolService {
     private SchoolRequest createSchoolRequestWithUser(School school) {
         SchoolRequest schoolRequest = new SchoolRequest(school);
         schoolRequest.setUserRequest(new UserRequest(school.getUser()));
-        Set<String> categoryTypes = school.getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
-        schoolRequest.setCategories(categoryTypes);
         return schoolRequest;
     }
 
@@ -48,6 +43,16 @@ public class SchoolServiceImpl implements SchoolService {
     public School getSchoolById(Long id) {
         return schoolRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "School with id " + id + " does not exist"));
+    }
+
+    @Override
+    public Set<SchoolRequest> getSchoolsByCitiesAndCategories(Set<String> cities, Set<String> categories) {
+        Set<CategoryType> categoryTypes = CategoryType.getCategoriesFromString(categories);
+        Set<School> schools = schoolRepository.findDistinctByCityInAndCategoriesCategoryTypeIn(cities, categoryTypes);
+        Set<SchoolRequest> schoolRequests = new HashSet<>();
+
+        schools.forEach(school -> schoolRequests.add(new SchoolRequest(school)));
+        return schoolRequests;
     }
 
     @Override
@@ -111,5 +116,10 @@ public class SchoolServiceImpl implements SchoolService {
     @Transactional
     public void deleteSchool(Long id) {
         schoolRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<String> getCities() {
+        return schoolRepository.getAllCities();
     }
 }

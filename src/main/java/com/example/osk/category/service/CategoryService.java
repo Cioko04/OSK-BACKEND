@@ -9,4 +9,6 @@ public interface CategoryService {
     Category getCategory(CategoryType categoryType);
 
     Set<Category> getUniqueValuesFromSecondList(Set<String> firstCategories, Set<String> secondCategories);
+
+    Set<Category> getCategoriesFromStringList(Set<String> categories);
 }

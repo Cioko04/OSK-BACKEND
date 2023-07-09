@@ -28,4 +28,11 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryType -> getCategory(CategoryType.getCategoryTypeFromString(categoryType)))
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public Set<Category> getCategoriesFromStringList(Set<String> categories) {
+        return categories.stream()
+                .map(categoryType -> getCategory(CategoryType.getCategoryTypeFromString(categoryType)))
+                .collect(Collectors.toSet());
+    }
 }

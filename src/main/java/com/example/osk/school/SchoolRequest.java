@@ -2,6 +2,7 @@ package com.example.osk.school;
 
 import com.example.osk.user.UserRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SchoolRequest {
     private Long id;
     private String schoolName;

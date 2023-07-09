@@ -26,7 +26,7 @@ public class Course {
     private LocalDate startDate;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
