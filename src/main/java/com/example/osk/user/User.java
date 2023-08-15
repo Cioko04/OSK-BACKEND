@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -60,9 +59,6 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Token> tokens = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<Course> courses = new HashSet<>();
 
     public User(UserRequest userRequest) {
         this.email = userRequest.getEmail();

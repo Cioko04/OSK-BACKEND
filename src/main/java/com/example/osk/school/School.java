@@ -1,6 +1,7 @@
 package com.example.osk.school;
 
 import com.example.osk.category.Category;
+import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.user.User;
 import lombok.*;
@@ -41,6 +42,9 @@ public class School {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "school", cascade = CascadeType.ALL)
     private Set<Instructor> instructors = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "school", cascade = CascadeType.ALL)
+    private Set<Course> courses = new HashSet<>();
 
     @ManyToMany(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}

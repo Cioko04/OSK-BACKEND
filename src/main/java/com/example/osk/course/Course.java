@@ -1,13 +1,11 @@
 package com.example.osk.course;
 
 import com.example.osk.category.Category;
-import com.example.osk.instructor.Instructor;
-import com.example.osk.user.User;
+import com.example.osk.school.School;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,24 +14,22 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(
-        name = "courses"
+        name = "courses",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"school_id", "category_id"})
 )
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private LocalDate startDate;
+    private BigDecimal price;
+    private String description;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "school_id")
+    private School school;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    private Instructor instructor;
 }

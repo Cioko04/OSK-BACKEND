@@ -1,9 +1,16 @@
 package com.example.osk.course.service;
 
-import com.example.osk.course.Course;
 import com.example.osk.course.CourseRequest;
+
+import java.util.Set;
 
 public interface CourseService {
 
-    void addCourse(CourseRequest courseRequest);
+    Set<CourseRequest> getAllCoursesForSchool(Long schoolId);
+
+    void saveCourse(CourseRequest courseRequest);
+
+    void updateCourse(CourseRequest courseRequest);
+
+    void deleteCourse(Long id);
 }

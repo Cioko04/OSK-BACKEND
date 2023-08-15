@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -14,8 +14,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CourseRequest {
     private Long id;
-    private LocalDate startDate;
-    private Long userId;
+    private BigDecimal price;
+    private String description;
+    private Long schoolId;
     private CategoryType categoryType;
-    private Long instructorId;
+
+    public CourseRequest(Course course) {
+        this.id = course.getId();
+        this.price = course.getPrice();
+        this.description = course.getDescription();
+        this.schoolId = course.getId();
+        this.categoryType = course.getCategory().getCategoryType();
+    }
 }

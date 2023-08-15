@@ -6,37 +6,41 @@ import com.example.osk.category.service.CategoryService;
 import com.example.osk.course.Course;
 import com.example.osk.course.CourseRequest;
 import com.example.osk.course.repository.CourseRepository;
-import com.example.osk.instructor.Instructor;
-import com.example.osk.instructor.service.InstructorService;
-import com.example.osk.user.User;
-import com.example.osk.user.service.UserService;
+import com.example.osk.school.School;
+import com.example.osk.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
-    private final InstructorService instructorService;
-    private final UserService userService;
+    private final SchoolService schoolService;
     private final CategoryService categoryService;
 
     @Override
-    public void addCourse(CourseRequest courseRequest) {
-        Instructor instructor = instructorService.getInstructorById(courseRequest.getInstructorId());
-        Category category = categoryService.getCategory(courseRequest.getCategoryType());
-        User user = userService.findUserByIdIfExists(courseRequest.getUserId());
+    public Set<CourseRequest> getAllCoursesForSchool(Long schoolId) {
+        Set<Course> courses = courseRepository.findAllBySchoolId(schoolId);
 
-        if (!hasUserTypeOfCourse(user.getCourses(), courseRequest.getCategoryType())) {
+        return courses.stream().map(CourseRequest::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void saveCourse(CourseRequest courseRequest) {
+        School school = schoolService.getSchoolById(courseRequest.getSchoolId());
+        Category category = categoryService.getCategory(courseRequest.getCategoryType());
+
+        if (!hasSchoolTypeOfCourse(school.getCourses(), courseRequest.getCategoryType())) {
             Course course = Course.builder()
-                    .startDate(LocalDate.now())
+                    .price(courseRequest.getPrice())
+                    .description(courseRequest.getDescription())
+                    .school(school)
                     .category(category)
-                    .user(user)
-                    .instructor(instructor)
                     .build();
 
             courseRepository.save(course);
@@ -45,7 +49,31 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    private boolean hasUserTypeOfCourse(Set<Course> courses, CategoryType categoryType) {
+    @Override
+    public void updateCourse(CourseRequest courseRequest) {
+        Course course = courseRepository.findById(courseRequest.getId()).orElseThrow(() -> new IllegalStateException(
+                "Course with id " + courseRequest.getId() + " does not exist"));
+
+        if (courseRequest.getPrice() != null &&
+                !Objects.equals(course.getPrice(), courseRequest.getPrice())) {
+            course.setPrice(courseRequest.getPrice());
+        }
+
+        if (courseRequest.getDescription() != null &&
+                courseRequest.getDescription().length() > 0 &&
+                !Objects.equals(course.getDescription(), courseRequest.getDescription())) {
+            course.setDescription(courseRequest.getDescription());
+        }
+
+        courseRepository.save(course);
+    }
+
+    @Override
+    public void deleteCourse(Long id) {
+        courseRepository.deleteById(id);
+    }
+
+    private boolean hasSchoolTypeOfCourse(Set<Course> courses, CategoryType categoryType) {
         return courses.stream().anyMatch(course -> categoryType.equals(course.getCategory().getCategoryType()));
     }
 }

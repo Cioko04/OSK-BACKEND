@@ -28,9 +28,6 @@ public class Instructor {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor", cascade = CascadeType.ALL)
-    private Set<Course> courses = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
     private School school;
@@ -44,14 +41,4 @@ public class Instructor {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getInstructors().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
-        category.getInstructors().remove(this);
-    }
 }
