@@ -10,9 +10,9 @@ public interface SchoolService {
 
     List<SchoolRequest> getSchools();
 
-    School getSchoolById(Long id);
+    List<SchoolRequest> getSchoolsWithCategories();
 
-    Set<SchoolRequest> getSchoolsByCitiesAndCategories(Set<String> cities, Set<String> categories);
+    School getSchoolById(Long id);
 
     void saveSchool(SchoolRequest schoolRequest);
 

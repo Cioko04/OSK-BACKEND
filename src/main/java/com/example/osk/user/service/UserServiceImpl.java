@@ -38,8 +38,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserRequest userRequest = new UserRequest(user);
         if (user.getSchool() != null) {
             SchoolRequest schoolRequest = new SchoolRequest(user.getSchool());
-            Set<String> categoryTypes = user.getSchool().getCategories().stream().map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
-            schoolRequest.setCategories(categoryTypes);
             userRequest.setSchoolRequest(schoolRequest);
         }
         return userRequest;

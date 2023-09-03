@@ -37,8 +37,5 @@ public class Category {
     private Set<Course> courses = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-    private Set<School> schools = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
     private Set<Instructor> instructors = new HashSet<>();
 }

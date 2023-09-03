@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -31,8 +30,5 @@ public class SchoolRequest {
         this.zipCode = school.getZipCode();
         this.nip = school.getNip();
         this.addDate = school.getAddDate();
-        this.categories = school.getCategories().stream()
-                .map(category -> category.getCategoryType().getValue())
-                .collect(Collectors.toSet());
     }
 }

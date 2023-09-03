@@ -22,6 +22,11 @@ public class InstructorController {
         return new ResponseEntity<>(instructorService.getInstructorsBySchoolId(id), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/countInstructorBySchool/{schoolId}")
+    public ResponseEntity<Long> countInstructorBySchool(@PathVariable("schoolId") Long schoolId) {
+        return new ResponseEntity<>(instructorService.countInstructorBySchool(schoolId), HttpStatus.OK);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody InstructorRequest instructorRequest) {
         try {

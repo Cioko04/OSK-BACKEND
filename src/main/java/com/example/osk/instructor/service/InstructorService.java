@@ -13,6 +13,10 @@ public interface InstructorService {
 
     List<InstructorRequest> getInstructorsBySchoolId(Long id);
 
+    Long countInstructorByCourseAndSchool(String categoryType, Long schoolId);
+
+    Long countInstructorBySchool(Long schoolId);
+
     void updateInstructor(InstructorRequest instructorRequest);
 
     void deleteInstructorById(Long id);

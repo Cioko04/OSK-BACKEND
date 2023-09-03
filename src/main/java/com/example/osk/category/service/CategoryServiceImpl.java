@@ -3,6 +3,8 @@ package com.example.osk.category.service;
 import com.example.osk.category.Category;
 import com.example.osk.category.CategoryType;
 import com.example.osk.category.repository.CategoryRepository;
+import com.example.osk.course.CourseRequest;
+import com.example.osk.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-
 
     @Override
     public Category getCategory(CategoryType categoryType) {

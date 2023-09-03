@@ -2,7 +2,12 @@ package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
 import com.example.osk.category.CategoryType;
+import com.example.osk.category.repository.CategoryRepository;
 import com.example.osk.category.service.CategoryService;
+import com.example.osk.course.CourseRequest;
+import com.example.osk.course.repository.CourseRepository;
+import com.example.osk.course.service.CourseService;
+import com.example.osk.course.service.CourseServiceImpl;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.repository.SchoolRepository;
@@ -15,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +31,7 @@ import java.util.stream.Collectors;
 public class SchoolServiceImpl implements SchoolService {
     private final SchoolRepository schoolRepository;
     private final UserService userService;
-    private final CategoryService categoryService;
+    private final CourseRepository courseRepository;
 
     @Override
     public List<SchoolRequest> getSchools() {
@@ -33,11 +41,28 @@ public class SchoolServiceImpl implements SchoolService {
         return schoolRequests;
     }
 
+    @Override
+    public List<SchoolRequest> getSchoolsWithCategories() {
+        List<School> schools = schoolRepository.findAll();
+        List<SchoolRequest> schoolRequests = new ArrayList<>();
+
+        schools.forEach(school -> schoolRequests.add(createSchoolRequestWithUser(school)));
+        schoolRequests.forEach(schoolRequest -> {
+                    Set<String> categories = courseRepository.getAllCategoriesFromCourseBySchoolId(schoolRequest.getId()).stream()
+                            .map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+                    schoolRequest.setCategories(categories);
+                }
+        );
+
+        return schoolRequests;
+    }
+
     private SchoolRequest createSchoolRequestWithUser(School school) {
         SchoolRequest schoolRequest = new SchoolRequest(school);
         schoolRequest.setUserRequest(new UserRequest(school.getUser()));
         return schoolRequest;
     }
+
 
     @Override
     public School getSchoolById(Long id) {
@@ -46,23 +71,10 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public Set<SchoolRequest> getSchoolsByCitiesAndCategories(Set<String> cities, Set<String> categories) {
-        Set<CategoryType> categoryTypes = CategoryType.getCategoriesFromString(categories);
-        Set<School> schools = schoolRepository.findDistinctByCityInAndCategoriesCategoryTypeIn(cities, categoryTypes);
-        Set<SchoolRequest> schoolRequests = new HashSet<>();
-
-        schools.forEach(school -> schoolRequests.add(new SchoolRequest(school)));
-        return schoolRequests;
-    }
-
-    @Override
     public void saveSchool(SchoolRequest schoolRequest) {
         UserRequest userRequest = schoolRequest.getUserRequest();
         userRequest.setRole(Role.OSK_ADMIN);
         User user = userService.saveUser(userRequest);
-        Set<Category> categories = schoolRequest.getCategories().stream()
-                .map(category -> categoryService.getCategory(CategoryType.getCategoryTypeFromString(category)))
-                .collect(Collectors.toSet());
 
         School school = School.builder()
                 .schoolName(schoolRequest.getSchoolName())
@@ -71,7 +83,6 @@ public class SchoolServiceImpl implements SchoolService {
                 .nip(schoolRequest.getNip())
                 .addDate(LocalDate.now())
                 .user(user)
-                .categories(categories)
                 .build();
         schoolRepository.save(school);
     }
@@ -105,9 +116,6 @@ public class SchoolServiceImpl implements SchoolService {
                 !Objects.equals(school.getNip(), schoolRequest.getNip())) {
             school.setNip(schoolRequest.getNip());
         }
-
-        Set<Category> updatedCategories = categoryService.getCategoriesFromStringList(schoolRequest.getCategories());
-        school.setCategories(updatedCategories);
 
         schoolRepository.save(school);
     }

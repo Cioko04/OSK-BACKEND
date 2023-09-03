@@ -6,6 +6,7 @@ import com.example.osk.category.service.CategoryService;
 import com.example.osk.course.Course;
 import com.example.osk.course.CourseRequest;
 import com.example.osk.course.repository.CourseRepository;
+import com.example.osk.instructor.service.InstructorService;
 import com.example.osk.school.School;
 import com.example.osk.school.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,26 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final SchoolService schoolService;
     private final CategoryService categoryService;
+    private final InstructorService instructorService;
 
     @Override
     public Set<CourseRequest> getAllCoursesForSchool(Long schoolId) {
-        Set<Course> courses = courseRepository.findAllBySchoolId(schoolId);
-
-        return courses.stream().map(CourseRequest::new).collect(Collectors.toSet());
+        Set<CourseRequest> courses = courseRepository.findAllBySchoolId(schoolId).stream()
+                .map(CourseRequest::new)
+                .collect(Collectors.toSet());
+        courses.forEach(courseRequest -> {
+            courseRequest.setStudentCount(0L);
+            courseRequest.setInstructorCount(instructorService.countInstructorByCourseAndSchool(courseRequest.getCategoryType(), courseRequest.getSchoolId()));
+        });
+        return courses;
     }
 
     @Override
     public void saveCourse(CourseRequest courseRequest) {
         School school = schoolService.getSchoolById(courseRequest.getSchoolId());
-        Category category = categoryService.getCategory(courseRequest.getCategoryType());
+        Category category = categoryService.getCategory(CategoryType.getCategoryTypeFromString(courseRequest.getCategoryType()));
 
-        if (!hasSchoolTypeOfCourse(school.getCourses(), courseRequest.getCategoryType())) {
+        if (!hasSchoolTypeOfCourse(school.getCourses(), CategoryType.getCategoryTypeFromString(courseRequest.getCategoryType()))) {
             Course course = Course.builder()
                     .price(courseRequest.getPrice())
                     .description(courseRequest.getDescription())

@@ -34,6 +34,16 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
+    public Long countInstructorByCourseAndSchool(String categoryType, Long schoolId) {
+        return instructorRepository.countInstructorByCategoryAndSchool(CategoryType.getCategoryTypeFromString(categoryType), schoolId);
+    }
+
+    @Override
+    public Long countInstructorBySchool(Long schoolId) {
+        return instructorRepository.countInstructorBySchool(schoolId);
+    }
+
+    @Override
     public void updateInstructor(InstructorRequest instructorRequest) {
         if (instructorRequest.getUserRequest() != null) {
             userService.updateUser(instructorRequest.getUserRequest());
