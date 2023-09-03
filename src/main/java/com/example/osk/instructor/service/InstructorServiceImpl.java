@@ -15,7 +15,6 @@ import com.example.osk.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,17 +30,37 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     public List<InstructorRequest> getInstructorsBySchoolId(Long id) {
         Set<Instructor> instructors = instructorRepository.findAllBySchoolId(id);
-        return instructors.stream().map(InstructorRequest::new).collect(Collectors.toList());
+        return instructors.stream().map(InstructorRequest::new).toList();
     }
 
     @Override
-    @Transactional
-    public void addCategoryToInstructor(Long instructorId, CategoryType categoryType) {
-        Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(() -> new IllegalStateException(
-                "Instructor with id " + instructorId + " does not exist"));
-        Category category = categoryService.getCategory(categoryType);
-        instructor.addCategory(category);
+    public Long countInstructorByCourseAndSchool(String categoryType, Long schoolId) {
+        return instructorRepository.countInstructorByCategoryAndSchool(CategoryType.getCategoryTypeFromString(categoryType), schoolId);
+    }
+
+    @Override
+    public Long countInstructorBySchool(Long schoolId) {
+        return instructorRepository.countInstructorBySchool(schoolId);
+    }
+
+    @Override
+    public void updateInstructor(InstructorRequest instructorRequest) {
+        if (instructorRequest.getUserRequest() != null) {
+            userService.updateUser(instructorRequest.getUserRequest());
+        }
+
+        Instructor instructor = getInstructorById(instructorRequest.getId());
+
+        Set<Category> updatedCategories = categoryService.getCategoriesFromStringList(instructorRequest.getCategories());
+        instructor.setCategories(updatedCategories);
+
         instructorRepository.save(instructor);
+    }
+
+    @Override
+    public Instructor getInstructorById(Long id) {
+        return instructorRepository.findById(id).orElseThrow(() -> new IllegalStateException(
+                "Instructor with id " + id + " does not exist"));
     }
 
     @Override
@@ -50,9 +69,14 @@ public class InstructorServiceImpl implements InstructorService {
         UserRequest userRequest = instructorRequest.getUserRequest();
         userRequest.setRole(Role.INSTRUCTOR);
         User user = userService.saveUser(userRequest);
+        Set<Category> categories = instructorRequest.getCategories().stream()
+                .map(category -> categoryService.getCategory(CategoryType.getCategoryTypeFromString(category)))
+                .collect(Collectors.toSet());
+
         Instructor instructor = Instructor.builder()
                 .school(school)
                 .user(user)
+                .categories(categories)
                 .build();
         instructorRepository.save(instructor);
     }

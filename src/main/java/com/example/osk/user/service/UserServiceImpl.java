@@ -1,7 +1,8 @@
 package com.example.osk.user.service;
 
+import com.example.osk.category.Category;
+import com.example.osk.category.CategoryType;
 import com.example.osk.school.SchoolRequest;
-import com.example.osk.school.service.SchoolService;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
 import com.example.osk.user.repository.UserRepository;
@@ -12,12 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.transaction.TransactionalException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to find user with email " + email));
         UserRequest userRequest = new UserRequest(user);
         if (user.getSchool() != null) {
-            userRequest.setSchoolRequest(new SchoolRequest(user.getSchool()));
+            SchoolRequest schoolRequest = new SchoolRequest(user.getSchool());
+            userRequest.setSchoolRequest(schoolRequest);
         }
         return userRequest;
     }
@@ -44,6 +46,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User findUserByIdIfExists(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(
+                        "User with id " + id + " does not exist"));
     }
 
     @Override

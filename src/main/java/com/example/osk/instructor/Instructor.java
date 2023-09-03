@@ -1,6 +1,7 @@
 package com.example.osk.instructor;
 
 import com.example.osk.category.Category;
+import com.example.osk.course.Course;
 import com.example.osk.school.School;
 import com.example.osk.user.User;
 import lombok.*;
@@ -28,7 +29,7 @@ public class Instructor {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="school_id")
+    @JoinColumn(name = "school_id")
     private School school;
 
     @ManyToMany(
@@ -40,14 +41,4 @@ public class Instructor {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getInstructors().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
-        category.getInstructors().remove(this);
-    }
 }

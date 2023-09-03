@@ -1,6 +1,7 @@
 package com.example.osk.user;
 
 
+import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import com.example.osk.token.Token;
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -56,8 +57,8 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Instructor instructor;
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Token> tokens = new HashSet<>();
 
     public User(UserRequest userRequest) {
         this.email = userRequest.getEmail();

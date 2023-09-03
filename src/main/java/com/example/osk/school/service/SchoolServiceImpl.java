@@ -2,7 +2,12 @@ package com.example.osk.school.service;
 
 import com.example.osk.category.Category;
 import com.example.osk.category.CategoryType;
+import com.example.osk.category.repository.CategoryRepository;
 import com.example.osk.category.service.CategoryService;
+import com.example.osk.course.CourseRequest;
+import com.example.osk.course.repository.CourseRepository;
+import com.example.osk.course.service.CourseService;
+import com.example.osk.course.service.CourseServiceImpl;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.repository.SchoolRepository;
@@ -18,13 +23,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SchoolServiceImpl implements SchoolService {
     private final SchoolRepository schoolRepository;
     private final UserService userService;
-    private final CategoryService categoryService;
+    private final CourseRepository courseRepository;
 
     @Override
     public List<SchoolRequest> getSchools() {
@@ -34,26 +41,33 @@ public class SchoolServiceImpl implements SchoolService {
         return schoolRequests;
     }
 
+    @Override
+    public List<SchoolRequest> getSchoolsWithCategories() {
+        List<School> schools = schoolRepository.findAll();
+        List<SchoolRequest> schoolRequests = new ArrayList<>();
+
+        schools.forEach(school -> schoolRequests.add(createSchoolRequestWithUser(school)));
+        schoolRequests.forEach(schoolRequest -> {
+                    Set<String> categories = courseRepository.getAllCategoriesFromCourseBySchoolId(schoolRequest.getId()).stream()
+                            .map(category -> category.getCategoryType().getValue()).collect(Collectors.toSet());
+                    schoolRequest.setCategories(categories);
+                }
+        );
+
+        return schoolRequests;
+    }
+
     private SchoolRequest createSchoolRequestWithUser(School school) {
         SchoolRequest schoolRequest = new SchoolRequest(school);
         schoolRequest.setUserRequest(new UserRequest(school.getUser()));
         return schoolRequest;
     }
 
+
     @Override
     public School getSchoolById(Long id) {
         return schoolRepository.findById(id).orElseThrow(() -> new IllegalStateException(
                 "School with id " + id + " does not exist"));
-    }
-
-    @Override
-    public SchoolRequest getSchool(String email) {
-        return null;
-    }
-
-    @Override
-    public List<UserRequest> getInstructors(Long id) {
-        return null;
     }
 
     @Override
@@ -70,15 +84,6 @@ public class SchoolServiceImpl implements SchoolService {
                 .addDate(LocalDate.now())
                 .user(user)
                 .build();
-        schoolRepository.save(school);
-    }
-
-    @Override
-    @Transactional
-    public void addCategoryToSchool(Long schoolId, CategoryType categoryType) {
-        School school = getSchoolById(schoolId);
-        Category category = categoryService.getCategory(categoryType);
-        school.addCategory(category);
         schoolRepository.save(school);
     }
 
@@ -111,6 +116,7 @@ public class SchoolServiceImpl implements SchoolService {
                 !Objects.equals(school.getNip(), schoolRequest.getNip())) {
             school.setNip(schoolRequest.getNip());
         }
+
         schoolRepository.save(school);
     }
 
@@ -118,5 +124,10 @@ public class SchoolServiceImpl implements SchoolService {
     @Transactional
     public void deleteSchool(Long id) {
         schoolRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<String> getCities() {
+        return schoolRepository.getAllCities();
     }
 }

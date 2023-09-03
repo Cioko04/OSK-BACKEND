@@ -1,6 +1,7 @@
 package com.example.osk.user;
 
 import com.example.osk.authentication.RegisterRequest;
+import com.example.osk.category.CategoryType;
 import com.example.osk.school.SchoolRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder

@@ -1,6 +1,7 @@
 package com.example.osk.school;
 
 import com.example.osk.category.Category;
+import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.user.User;
 import lombok.*;
@@ -42,15 +43,8 @@ public class School {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "school", cascade = CascadeType.ALL)
     private Set<Instructor> instructors = new HashSet<>();
 
-    @ManyToMany(
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
-    )
-    @JoinTable(
-            name = "schools_categories",
-            joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> categories = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "school", cascade = CascadeType.ALL)
+    private Set<Course> courses = new HashSet<>();
 
     public School(SchoolRequest schoolRequest) {
         this.schoolName = schoolRequest.getSchoolName();
@@ -58,15 +52,5 @@ public class School {
         this.zipCode = schoolRequest.getZipCode();
         this.nip = schoolRequest.getNip();
         this.addDate = schoolRequest.getAddDate();
-    }
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getSchools().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
-        category.getSchools().remove(this);
     }
 }

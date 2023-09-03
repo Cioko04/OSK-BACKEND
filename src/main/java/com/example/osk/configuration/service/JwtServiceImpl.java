@@ -14,10 +14,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
-public class JwtServiceImpl implements JwtService{
+public class JwtServiceImpl implements JwtService {
 
     private static final String SECRET_KEY = "357538782F413F4428472B4B6150645367566B59703373367639792442264529";
 
@@ -35,7 +34,7 @@ public class JwtServiceImpl implements JwtService{
     @Override
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        claims.put("role", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
         return generateToken(claims, userDetails);
     }
 
@@ -46,7 +45,7 @@ public class JwtServiceImpl implements JwtService{
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

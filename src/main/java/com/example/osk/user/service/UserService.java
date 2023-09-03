@@ -14,6 +14,8 @@ public interface UserService {
 
     Optional<User> findUserById(Long id);
 
+    User findUserByIdIfExists(Long id);
+
     List<UserRequest> getUsersWithSchool();
 
     User saveUser(UserRequest userRequest);
