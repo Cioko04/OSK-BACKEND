@@ -1,11 +1,15 @@
 package com.example.osk.course;
 
+import com.example.osk.bookedCourse.BookedCourse;
 import com.example.osk.category.Category;
+import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +18,7 @@ import java.math.BigDecimal;
 @Builder
 @Entity
 @Table(
-        name = "courses",
+        name = "COURSES",
         uniqueConstraints = @UniqueConstraint(columnNames = {"school_id", "category_id"})
 )
 public class Course {
@@ -32,4 +36,7 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
+    private Set<BookedCourse> bookedCourses = new HashSet<>();
 }

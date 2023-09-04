@@ -1,7 +1,7 @@
 package com.example.osk.instructor;
 
+import com.example.osk.bookedCourse.BookedCourse;
 import com.example.osk.category.Category;
-import com.example.osk.course.Course;
 import com.example.osk.school.School;
 import com.example.osk.user.User;
 import lombok.*;
@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(
-        name = "instructors"
+        name = "INSTRUCTORS"
 )
 public class Instructor {
     @Id
@@ -31,6 +31,9 @@ public class Instructor {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
     private School school;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor", cascade = CascadeType.ALL)
+    private Set<BookedCourse> bookedCourses = new HashSet<>();
 
     @ManyToMany(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}

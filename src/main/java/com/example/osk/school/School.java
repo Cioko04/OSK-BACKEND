@@ -1,6 +1,5 @@
 package com.example.osk.school;
 
-import com.example.osk.category.Category;
 import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.user.User;
@@ -19,7 +18,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(
-        name = "schools"
+        name = "SCHOOLS"
 )
 public class School {
     @Id

@@ -1,6 +1,7 @@
 package com.example.osk.user;
 
 
+import com.example.osk.bookedCourse.BookedCourse;
 import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
@@ -25,13 +26,14 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(
-        name = "users",
+        name = "USERS",
         uniqueConstraints = @UniqueConstraint(
                 name = "emailid_unique",
                 columnNames = "email"
         )
 )
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,6 +61,9 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Token> tokens = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<BookedCourse> bookedCourses = new HashSet<>();
 
     public User(UserRequest userRequest) {
         this.email = userRequest.getEmail();

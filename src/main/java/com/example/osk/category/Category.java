@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(
-        name = "categories",
+        name = "CATEGORIES",
         uniqueConstraints = @UniqueConstraint(
         name = "type_unique",
         columnNames = "category_type"
