@@ -2,7 +2,6 @@ package com.example.osk.instructor.controller;
 
 import com.example.osk.instructor.InstructorRequest;
 import com.example.osk.instructor.service.InstructorService;
-import com.example.osk.school.SchoolRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
