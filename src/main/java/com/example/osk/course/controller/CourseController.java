@@ -2,14 +2,11 @@ package com.example.osk.course.controller;
 
 import com.example.osk.course.CourseRequest;
 import com.example.osk.course.service.CourseService;
-import com.example.osk.instructor.InstructorRequest;
-import com.example.osk.school.SchoolRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -28,6 +25,27 @@ public class CourseController {
         try {
             courseService.saveCourse(courseRequest);
             return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(path = "/updateCourse")
+    public ResponseEntity<String> updateInstructor(
+            @RequestBody CourseRequest courseRequest) {
+        try {
+            courseService.updateCourse(courseRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(path = "deleteCourseById/{id}")
+    public ResponseEntity<String> deleteInstructorById(@PathVariable("id") Long id) {
+        try {
+            courseService.deleteCourse(id);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
