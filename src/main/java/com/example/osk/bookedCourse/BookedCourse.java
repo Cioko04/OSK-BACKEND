@@ -1,6 +1,5 @@
 package com.example.osk.bookedCourse;
 
-import com.example.osk.category.Category;
 import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.user.User;

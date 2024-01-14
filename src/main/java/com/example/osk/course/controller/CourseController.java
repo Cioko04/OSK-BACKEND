@@ -21,31 +21,32 @@ public class CourseController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody CourseRequest courseRequest) {
+    public ResponseEntity<CourseRequest> save(@RequestBody CourseRequest courseRequest) {
         try {
-            courseService.saveCourse(courseRequest);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            CourseRequest savedCourse = courseService.saveCourse(courseRequest);
+            return new ResponseEntity<>(savedCourse, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping(path = "/updateCourse")
-    public ResponseEntity<String> updateInstructor(
+    public ResponseEntity<CourseRequest> updateCourse(
             @RequestBody CourseRequest courseRequest) {
         try {
-            courseService.updateCourse(courseRequest);
-            return new ResponseEntity<>(HttpStatus.OK);
+            CourseRequest updatedCourse = courseService.updateCourse(courseRequest);
+            return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     @DeleteMapping(path = "deleteCourseById/{id}")
-    public ResponseEntity<String> deleteInstructorById(@PathVariable("id") Long id) {
+    public ResponseEntity<Long> deleteInstructorById(@PathVariable("id") Long id) {
         try {
-            courseService.deleteCourse(id);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            Long deletedCourseId = courseService.deleteCourse(id);
+            return new ResponseEntity<>(deletedCourseId, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -8,9 +8,9 @@ public interface CourseService {
 
     Set<CourseRequest> getAllCoursesForSchool(Long schoolId);
 
-    void saveCourse(CourseRequest courseRequest);
+    CourseRequest saveCourse(CourseRequest courseRequest);
 
-    void updateCourse(CourseRequest courseRequest);
+    CourseRequest updateCourse(CourseRequest courseRequest);
 
-    void deleteCourse(Long id);
+    Long deleteCourse(Long id);
 }

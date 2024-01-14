@@ -8,7 +8,7 @@ public enum CategoryType {
     A1("A1"),
     A2("A2"),
     A("A"),
-    B2("B2"),
+    B1("B1"),
     B("B"),
     BE("B+E"),
     C("C"),
@@ -22,7 +22,7 @@ public enum CategoryType {
     T("T"),
     TRAMWAJ("Tramwaj");
 
-    private String value;
+    private final String value;
 
     private CategoryType(String value) {
         this.value = value;

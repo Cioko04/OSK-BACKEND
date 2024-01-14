@@ -38,11 +38,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void saveCourse(CourseRequest courseRequest) {
+    public CourseRequest saveCourse(CourseRequest courseRequest) {
         School school = schoolService.getSchoolById(courseRequest.getSchoolId());
         Category category = categoryService.getCategory(CategoryType.getCategoryTypeFromString(courseRequest.getCategoryType()));
 
-        if (!hasSchoolTypeOfCourse(school.getCourses(), CategoryType.getCategoryTypeFromString(courseRequest.getCategoryType()))) {
+        if (!hasSchoolTypeOfCourse(school.getCourses(), category.getCategoryType())) {
             Course course = Course.builder()
                     .price(courseRequest.getPrice())
                     .description(courseRequest.getDescription())
@@ -50,14 +50,15 @@ public class CourseServiceImpl implements CourseService {
                     .category(category)
                     .build();
 
-            courseRepository.save(course);
+            Course savedCourse = courseRepository.save(course);
+            return new CourseRequest(savedCourse);
         } else {
-            throw new DuplicateKeyException("User already has this type of course");
+            throw new DuplicateKeyException("User already has this type of course: " + category.getCategoryType());
         }
     }
 
     @Override
-    public void updateCourse(CourseRequest courseRequest) {
+    public CourseRequest updateCourse(CourseRequest courseRequest) {
         Course course = courseRepository.findById(courseRequest.getId()).orElseThrow(() -> new IllegalStateException(
                 "Course with id " + courseRequest.getId() + " does not exist"));
 
@@ -72,12 +73,14 @@ public class CourseServiceImpl implements CourseService {
             course.setDescription(courseRequest.getDescription());
         }
 
-        courseRepository.save(course);
+        Course savedCourse = courseRepository.save(course);
+        return new CourseRequest(savedCourse);
     }
 
     @Override
-    public void deleteCourse(Long id) {
+    public Long deleteCourse(Long id) {
         courseRepository.deleteById(id);
+        return id;
     }
 
     private boolean hasSchoolTypeOfCourse(Set<Course> courses, CategoryType categoryType) {
