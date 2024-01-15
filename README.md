@@ -19,7 +19,7 @@ This Java-based backend project serves as the foundation for the Driving School 
 - Java 11+
 - Spring Boot for API development
 - Hibernate for ORM with MySQL
-- SQL for database management
+- MySQL for database management
 - Maven for dependency management
 
 
