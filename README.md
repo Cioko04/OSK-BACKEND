@@ -10,7 +10,7 @@ This Java-based backend project serves as the foundation for the Driving School 
 - **User Authentication:** Secure handling of user authentication for driving schools, students, and instructors.
 - **Lesson Management:** API endpoints to create, update, and delete driving lessons, with support for scheduling and resource allocation.
 - **Payment Processing:** Integration with payment gateways for processing course fees securely.
-- **Database Management:** Utilizes SQL for efficient data storage, retrieval, and management of user profiles, lesson details, and payment records.
+- **Database Management:** Leverage MySQL for seamless data storage, retrieval, and management of user profiles, lesson details, and payment records.
 - **Role-Based Access Control:** Implements role-based access control to ensure that only authorized users can perform specific actions.
 
   
@@ -18,7 +18,7 @@ This Java-based backend project serves as the foundation for the Driving School 
 
 - Java 11+
 - Spring Boot for API development
-- Hibernate for ORM
+- Hibernate for ORM with MySQL
 - SQL for database management
 - Maven for dependency management
 
