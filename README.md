@@ -16,7 +16,7 @@ This Java-based backend project serves as the foundation for the Driving School 
   
 **Technologies Used:**
 
-- Java 11+
+- Java 17+
 - Spring Boot for API development
 - Hibernate for ORM with MySQL
 - MySQL for database management
