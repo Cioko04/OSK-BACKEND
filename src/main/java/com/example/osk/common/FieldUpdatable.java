@@ -1,27 +1,19 @@
 package com.example.osk.common;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public interface FieldUpdatable {
+public interface FieldUpdatable<T> {
 
-    default void updateFieldIfChanged(String changedValue, String currentValue, Consumer<String> fieldUpdater) {
-        if (changedValue != null && !changedValue.isEmpty() && !Objects.equals(currentValue, changedValue)) {
+    default void updateFieldIfChanged(T changedValue, T currentValue, Consumer<T> fieldUpdater) {
+        if (shouldUpdate(changedValue, currentValue)) {
             fieldUpdater.accept(changedValue);
         }
     }
 
-    default void updateFieldIfChanged(LocalDate changedValue, LocalDate currentValue, Consumer<LocalDate> fieldUpdater) {
-        if (changedValue != null && !Objects.equals(currentValue, changedValue)) {
-            fieldUpdater.accept(changedValue);
-        }
-    }
-
-    default void updateFieldIfChanged(BigDecimal changedValue, BigDecimal currentValue, Consumer<BigDecimal> fieldUpdater) {
-        if (changedValue != null && !Objects.equals(currentValue, changedValue)) {
-            fieldUpdater.accept(changedValue);
-        }
+    default boolean shouldUpdate(T changedValue, T currentValue) {
+        return changedValue != null
+                && !Objects.equals(currentValue, changedValue)
+                && (!(changedValue instanceof String checkedChangedValue) || !checkedChangedValue.isEmpty());
     }
 }
