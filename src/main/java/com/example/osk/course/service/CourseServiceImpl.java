@@ -3,6 +3,7 @@ package com.example.osk.course.service;
 import com.example.osk.category.Category;
 import com.example.osk.category.CategoryType;
 import com.example.osk.category.service.CategoryService;
+import com.example.osk.common.FieldUpdatable;
 import com.example.osk.course.Course;
 import com.example.osk.course.CourseRequest;
 import com.example.osk.course.repository.CourseRepository;
@@ -13,13 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CourseServiceImpl implements CourseService {
+public class CourseServiceImpl implements CourseService, FieldUpdatable {
     private final CourseRepository courseRepository;
     private final SchoolService schoolService;
     private final CategoryService categoryService;
@@ -62,16 +62,8 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseRepository.findById(courseRequest.getId()).orElseThrow(() -> new IllegalStateException(
                 "Course with id " + courseRequest.getId() + " does not exist"));
 
-        if (courseRequest.getPrice() != null &&
-                !Objects.equals(course.getPrice(), courseRequest.getPrice())) {
-            course.setPrice(courseRequest.getPrice());
-        }
-
-        if (courseRequest.getDescription() != null &&
-                courseRequest.getDescription().length() > 0 &&
-                !Objects.equals(course.getDescription(), courseRequest.getDescription())) {
-            course.setDescription(courseRequest.getDescription());
-        }
+        updateFieldIfChanged(courseRequest.getPrice(), course.getPrice(), course::setPrice);
+        updateFieldIfChanged(courseRequest.getDescription(), course.getDescription(), course::setDescription);
 
         Course savedCourse = courseRepository.save(course);
         return new CourseRequest(savedCourse);
