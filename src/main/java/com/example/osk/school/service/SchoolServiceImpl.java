@@ -1,13 +1,7 @@
 package com.example.osk.school.service;
 
-import com.example.osk.category.Category;
-import com.example.osk.category.CategoryType;
-import com.example.osk.category.repository.CategoryRepository;
-import com.example.osk.category.service.CategoryService;
-import com.example.osk.course.CourseRequest;
+import com.example.osk.common.FieldUpdatable;
 import com.example.osk.course.repository.CourseRepository;
-import com.example.osk.course.service.CourseService;
-import com.example.osk.course.service.CourseServiceImpl;
 import com.example.osk.school.School;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.school.repository.SchoolRepository;
@@ -22,13 +16,12 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SchoolServiceImpl implements SchoolService {
+public class SchoolServiceImpl implements SchoolService, FieldUpdatable {
     private final SchoolRepository schoolRepository;
     private final UserService userService;
     private final CourseRepository courseRepository;
@@ -95,27 +88,10 @@ public class SchoolServiceImpl implements SchoolService {
         }
 
         School school = getSchoolById(schoolRequest.getId());
-
-        if (schoolRequest.getSchoolName() != null &&
-                schoolRequest.getSchoolName().length() > 0 &&
-                !Objects.equals(school.getSchoolName(), schoolRequest.getSchoolName())) {
-            school.setSchoolName(schoolRequest.getSchoolName());
-        }
-        if (schoolRequest.getCity() != null &&
-                schoolRequest.getCity().length() > 0 &&
-                !Objects.equals(school.getCity(), schoolRequest.getCity())) {
-            school.setCity(schoolRequest.getCity());
-        }
-        if (schoolRequest.getZipCode() != null &&
-                schoolRequest.getZipCode().length() > 0 &&
-                !Objects.equals(school.getZipCode(), schoolRequest.getZipCode())) {
-            school.setZipCode(schoolRequest.getZipCode());
-        }
-        if (schoolRequest.getNip() != null &&
-                schoolRequest.getNip().length() > 0 &&
-                !Objects.equals(school.getNip(), schoolRequest.getNip())) {
-            school.setNip(schoolRequest.getNip());
-        }
+        updateFieldIfChanged(schoolRequest.getSchoolName(), school.getSchoolName(), school::setSchoolName);
+        updateFieldIfChanged(schoolRequest.getCity(), school.getCity(), school::setCity);
+        updateFieldIfChanged(schoolRequest.getZipCode(), school.getZipCode(), school::setZipCode);
+        updateFieldIfChanged(schoolRequest.getNip(), school.getNip(), school::setNip);
 
         schoolRepository.save(school);
     }

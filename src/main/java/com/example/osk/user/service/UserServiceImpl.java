@@ -1,7 +1,6 @@
 package com.example.osk.user.service;
 
-import com.example.osk.category.Category;
-import com.example.osk.category.CategoryType;
+import com.example.osk.common.FieldUpdatable;
 import com.example.osk.school.SchoolRequest;
 import com.example.osk.user.User;
 import com.example.osk.user.UserRequest;
@@ -14,15 +13,12 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService, FieldUpdatable {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -64,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<UserRequest> getUsersWithSchool() {
         Set<User> usersWithSchool = userRepository.findUsersWithSchool();
-        return usersWithSchool.stream().map(UserRequest::new).collect(Collectors.toList());
+        return usersWithSchool.stream().map(UserRequest::new).toList();
     }
 
     @Override
@@ -91,35 +87,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void updateUser(UserRequest userRequest) {
         User user = getUserById(userRequest.getId());
 
-        if (userRequest.getEmail() != null &&
-                userRequest.getEmail().length() > 0 &&
-                !Objects.equals(user.getEmail(), userRequest.getEmail())) {
-            user.setEmail(userRequest.getEmail());
-        }
-        if (userRequest.getPassword() != null &&
-                userRequest.getPassword().length() > 0 &&
-                !Objects.equals(user.getPassword(), userRequest.getPassword())) {
-            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        }
-        if (userRequest.getName() != null &&
-                userRequest.getName().length() > 0 &&
-                !Objects.equals(user.getName(), userRequest.getName())) {
-            user.setName(userRequest.getName());
-        }
-        if (userRequest.getSecondName() != null &&
-                userRequest.getSecondName().length() > 0 &&
-                !Objects.equals(user.getSecondName(), userRequest.getSecondName())) {
-            user.setSecondName(userRequest.getSecondName());
-        }
-        if (userRequest.getLastName() != null &&
-                userRequest.getLastName().length() > 0 &&
-                !Objects.equals(user.getLastName(), userRequest.getLastName())) {
-            user.setLastName(userRequest.getLastName());
-        }
-        if (userRequest.getDob() != null &&
-                !Objects.equals(user.getDob(), userRequest.getDob())) {
-            user.setDob(userRequest.getDob());
-        }
+        updateFieldIfChanged(userRequest.getEmail(), user.getEmail(), user::setEmail);
+        updateFieldIfChanged(userRequest.getPassword(), user.getPassword(),
+                updatedPassword -> user.setPassword(passwordEncoder.encode(updatedPassword)));
+        updateFieldIfChanged(userRequest.getName(), user.getName(), user::setName);
+        updateFieldIfChanged(userRequest.getSecondName(), user.getSecondName(), user::setSecondName);
+        updateFieldIfChanged(userRequest.getLastName(), user.getLastName(), user::setLastName);
+        updateFieldIfChanged(userRequest.getDob(), user.getDob(), user::setDob);
+
         userRepository.save(user);
     }
 
