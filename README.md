@@ -3,6 +3,7 @@
 Link to front-end: https://github.com/Cioko04/OSK-FRONTEND
 
 **Description:**
+
 This Java-based backend project serves as the foundation for the Driving School Management System, offering robust APIs for user authentication, lesson management, payment processing, and utilizing MySQL as the relational database for efficient data storage.
 
 **Key Features:**
