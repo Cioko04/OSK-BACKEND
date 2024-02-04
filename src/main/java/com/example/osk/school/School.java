@@ -3,10 +3,10 @@ package com.example.osk.school;
 import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.user.User;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;

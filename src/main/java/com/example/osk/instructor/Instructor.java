@@ -4,9 +4,9 @@ import com.example.osk.bookedCourse.BookedCourse;
 import com.example.osk.category.Category;
 import com.example.osk.school.School;
 import com.example.osk.user.User;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

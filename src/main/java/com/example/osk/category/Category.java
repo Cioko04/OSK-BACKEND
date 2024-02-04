@@ -2,11 +2,9 @@ package com.example.osk.category;
 
 import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
-import com.example.osk.school.School;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,15 +17,14 @@ import java.util.Set;
 @Table(
         name = "CATEGORIES",
         uniqueConstraints = @UniqueConstraint(
-        name = "type_unique",
-        columnNames = "category_type"
-)
+                name = "type_unique",
+                columnNames = "category_type"
+        )
 )
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private int duration;
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type")

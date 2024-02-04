@@ -2,11 +2,10 @@ package com.example.osk.course;
 
 import com.example.osk.bookedCourse.BookedCourse;
 import com.example.osk.category.Category;
-import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;

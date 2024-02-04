@@ -2,8 +2,7 @@ package com.example.osk.authentication.service;
 
 import com.example.osk.authentication.AuthenticationRequest;
 import com.example.osk.authentication.RegisterRequest;
-
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 public interface AuthenticationService {
 

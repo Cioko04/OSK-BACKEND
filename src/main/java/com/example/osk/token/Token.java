@@ -1,9 +1,8 @@
 package com.example.osk.token;
 
 import com.example.osk.user.User;
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor

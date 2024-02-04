@@ -2,17 +2,16 @@ package com.example.osk.user;
 
 
 import com.example.osk.bookedCourse.BookedCourse;
-import com.example.osk.course.Course;
 import com.example.osk.instructor.Instructor;
 import com.example.osk.school.School;
 import com.example.osk.token.Token;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
